@@ -12,6 +12,7 @@ type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void
 }
 
+
 const Register = ({ setCurrentView }: Props) => {
   const [message, formAction] = useActionState(signup, null)
 
