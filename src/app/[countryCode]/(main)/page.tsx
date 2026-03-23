@@ -1,14 +1,21 @@
 import { Metadata } from "next"
 
-import FeaturedProducts from "@modules/home/components/featured-products"
-import Hero from "@modules/home/components/hero"
-import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
+import BrandStory from "./_components/brand-story"
+import CategoriesShowcase from "./_components/categories-showcase"
+import FAQ from "./_components/faq"
+import FarmerSpotlight from "./_components/farmer-spotlight"
+import FeaturedProducts from "./_components/featured-products"
+import Hero from "./_components/hero"
+import HowItWorks from "./_components/how-it-works"
+import Newsletter from "./_components/newsletter"
+import Testimonials from "./_components/testimonials"
+import TrustBar from "./_components/trust-bar"
 
 export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
+  title: "Abundish — Farm Direct Produce",
   description:
-    "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+    "Fresh farm-to-table produce connected directly to verified Nigerian farmers.",
 }
 
 export default async function Home(props: {
@@ -20,22 +27,20 @@ export default async function Home(props: {
 
   const region = await getRegion(countryCode)
 
-  const { collections } = await listCollections({
-    fields: "id, handle, title",
-  })
-
-  if (!collections || !region) {
-    return null
-  }
+  if (!region) return null
 
   return (
     <>
       <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
-      </div>
+      <TrustBar />
+      <HowItWorks />
+      <FeaturedProducts region={region} />
+      <BrandStory />
+      <CategoriesShowcase />
+      <FarmerSpotlight />
+      <Testimonials />
+      <FAQ />
+      <Newsletter />
     </>
   )
 }
