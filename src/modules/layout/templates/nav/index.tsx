@@ -110,7 +110,7 @@ export default async function Nav() {
                       </p>
                       {(cat.children ?? []).length ? (
                         <div className="flex flex-col gap-2">
-                          {cat.children.slice(0, 6).map((child) => (
+                          {cat.children?.slice(0, 6).map((child) => (
                             <LocalizedClientLink
                               key={child.id}
                               href={`/categories/${child.handle}`}
