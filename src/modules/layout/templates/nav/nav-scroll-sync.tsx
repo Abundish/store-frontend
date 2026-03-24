@@ -9,14 +9,10 @@ export default function NavScrollSync() {
 
     const apply = () => {
       const scrolled = window.scrollY > 80
+      header.setAttribute("data-scrolled", scrolled ? "true" : "false")
       header.classList.toggle("bg-[#006b2f]", scrolled)
       header.classList.toggle("bg-transparent", !scrolled)
-      header.classList.toggle("text-[#F9F6EE]", scrolled)
-      header.classList.toggle("text-white", !scrolled)
-      header.classList.toggle(
-        "shadow-[0_10px_30px_rgba(0,0,0,0.18)]",
-        scrolled
-      )
+      header.classList.toggle("shadow-[0_4px_24px_rgba(0,0,0,0.12)]", scrolled)
     }
 
     apply()

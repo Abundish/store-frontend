@@ -1,11 +1,12 @@
 import Image from "next/image"
-import { ChevronDown, Search } from "lucide-react"
+import { Search } from "lucide-react"
 
 import { listCategories } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 import MobileDrawer from "./mobile-drawer"
 import NavScrollSync from "./nav-scroll-sync"
+import DesktopCategoriesMenu from "./desktop-categories"
 
 type CategoryChild = {
   id: string
@@ -41,7 +42,8 @@ export default async function Nav() {
     <div className="sticky top-0 inset-x-0 z-50">
       <header
         id="abundish-nav"
-        className="relative h-16 w-full transition-colors duration-300 bg-transparent text-white"
+        data-scrolled="false"
+        className="group relative h-16 w-full bg-transparent text-[#1A1A1A] transition-[background-color,box-shadow] duration-[400ms] ease-[ease]"
       >
         <NavScrollSync />
 
@@ -60,7 +62,7 @@ export default async function Nav() {
                 alt="Abundish logo"
                 width={140}
                 height={44}
-                className="h-8 w-auto"
+                className="logo-img h-8 w-auto transition-[filter] duration-300 group-data-[scrolled=true]:brightness-0 group-data-[scrolled=true]:invert"
                 priority={false}
               />
             </LocalizedClientLink>
@@ -73,73 +75,33 @@ export default async function Nav() {
           >
             <LocalizedClientLink
               href="/"
-              className="font-semibold hover:opacity-90 transition"
+              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
             >
               Home
             </LocalizedClientLink>
 
             <LocalizedClientLink
               href="/store"
-              className="h-[44px] px-6 rounded-full bg-[#FFCC00] text-[#1A1A1A] font-semibold inline-flex items-center justify-center transition hover:brightness-95"
+              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:bg-[#FFCC00] after:transition-transform after:duration-200 hover:text-[#006b2f] hover:after:scale-x-105 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:hover:text-white"
             >
               Shop Now
             </LocalizedClientLink>
 
             <LocalizedClientLink
               href="/#faq"
-              className="font-semibold hover:opacity-90 transition"
+              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
             >
               FAQs
             </LocalizedClientLink>
 
-            <div className="relative group">
-              <button
-                type="button"
-                className="flex items-center gap-2 font-semibold hover:opacity-90 transition focus:outline-none"
-              >
-                <span>Categories</span>
-                <ChevronDown size={16} />
-              </button>
-
-              <div className="absolute left-0 top-[calc(100%+12px)] hidden group-hover:block group-focus-within:block w-[620px] max-w-[84vw] bg-white text-[#1A1A1A] border border-[#D6E8D0] shadow-[0_22px_60px_rgba(0,0,0,0.18)] px-6 py-6">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                  {topLevelCategories.map((cat) => (
-                    <div key={cat.id} className="flex flex-col gap-3">
-                      <p className="font-dm-sans font-semibold text-[#006b2f]">
-                        {cat.name}
-                      </p>
-                      {(cat.children ?? []).length ? (
-                        <div className="flex flex-col gap-2">
-                          {cat.children?.slice(0, 6).map((child) => (
-                            <LocalizedClientLink
-                              key={child.id}
-                              href={`/categories/${child.handle}`}
-                              className="font-dm-sans text-[14px] text-[#1A1A1A]/70 hover:text-[#008528] transition"
-                            >
-                              {child.name}
-                            </LocalizedClientLink>
-                          ))}
-                        </div>
-                      ) : (
-                        <LocalizedClientLink
-                          href={`/categories/${cat.handle}`}
-                          className="font-dm-sans text-[14px] text-[#1A1A1A]/70 hover:text-[#008528] transition"
-                        >
-                          View all
-                        </LocalizedClientLink>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <DesktopCategoriesMenu categories={topLevelCategories} />
           </nav>
 
           {/* Desktop right nav */}
           <div className="hidden md:flex items-center gap-x-6 font-dm-sans">
             <LocalizedClientLink
               href="/store"
-              className="inline-flex items-center gap-2 font-semibold hover:opacity-90 transition"
+              className="relative inline-flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
               aria-label="Search"
             >
               <Search size={18} />
@@ -148,14 +110,14 @@ export default async function Nav() {
 
             <LocalizedClientLink
               href="/account"
-              className="font-semibold hover:opacity-90 transition"
+              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
             >
               Account
             </LocalizedClientLink>
 
             <LocalizedClientLink
               href="/cart"
-              className="font-semibold hover:opacity-90 transition"
+              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
             >
               Cart
             </LocalizedClientLink>
