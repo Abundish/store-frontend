@@ -1,11 +1,12 @@
 import Image from "next/image"
+import { ArrowRight, Play } from "lucide-react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[100vh] w-full overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] min-h-[100vh]">
+    <section className="relative w-full overflow-hidden min-h-[calc(100vh-64px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] min-h-[calc(100vh-64px)]">
         {/* Left panel */}
         <div className="relative bg-[#F9F6EE] px-6 py-16 lg:px-14 lg:py-24 flex flex-col justify-center">
           <div className="absolute inset-0 pointer-events-none">
@@ -27,19 +28,27 @@ export default function Hero() {
               freshness.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mt-8 items-start">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mt-10">
               <LocalizedClientLink
                 href="/store"
-                className="h-[44px] px-6 rounded-full bg-[#FFCC00] text-[#1A1A1A] font-dm-sans font-semibold inline-flex items-center justify-center min-w-[220px] hover:brightness-95 transition"
+                className="group h-[52px] px-8 rounded-[6px] bg-[#006b2f] text-white font-dm-sans font-semibold text-[15px] tracking-[-0.01em] inline-flex items-center justify-center gap-3 w-full sm:w-auto shadow-[0_2px_12px_rgba(0,107,47,0.25)] hover:bg-[#008528] transition-colors duration-200"
               >
                 Shop Fresh Produce
+                <ArrowRight
+                  size={16}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
               </LocalizedClientLink>
 
               <a
                 href="#how-it-works"
-                className="h-[44px] px-6 rounded-full border border-[#008528] text-[#008528] font-dm-sans font-semibold inline-flex items-center justify-center min-w-[220px] hover:bg-[#006b2f] hover:border-[#006b2f] hover:text-white transition-colors"
+                className="group inline-flex items-center justify-center sm:justify-start gap-2 font-dm-sans font-medium text-[15px] text-[#006b2f] hover:text-[#008528] transition-colors w-full sm:w-auto"
               >
-                How It Works
+                <Play size={14} fill="currentColor" className="opacity-70" />
+                <span className="relative inline-block pb-[3px]">
+                  <span>How It Works</span>
+                  <span className="absolute left-0 bottom-0 h-[2px] w-full origin-left scale-x-100 bg-[#FFCC00] transition-transform duration-200 group-hover:scale-x-95" />
+                </span>
               </a>
             </div>
 
@@ -48,28 +57,28 @@ export default function Hero() {
               <span className="text-[#1A1A1A]/40">|</span>
               <span>⚡ Same-Day Delivery</span>
               <span className="text-[#1A1A1A]/40">|</span>
-              <span>📍 Lagos &amp; Abuja</span>
+              <span>📍 Lagos</span>
             </div>
           </div>
         </div>
 
         {/* Right panel */}
-        <div className="relative bg-[#006b2f]">
+        <div className="relative bg-[#006b2f] min-h-[360px] lg:min-h-0">
           <div className="absolute inset-0">
             <Image
-              src="https://images.unsplash.com/photo-1543362906-acfc16c67580?auto=format&fit=crop&w=2200&q=80"
-              alt="Fresh vegetables on a farm table"
+              src="/hero-image.jpg"
+              alt="Fresh farm produce — harvested at peak freshness for Abundish"
               fill
               sizes="(max-width: 1024px) 100vw, 45vw"
               priority
-              className="object-cover"
+              className="object-cover object-center"
             />
           </div>
 
           <div className="absolute inset-0 bg-[#FFCC00]/10 mix-blend-multiply" />
 
           {/* Floating partner card */}
-          <div className="absolute bottom-6 left-6 lg:left-[-10px] bg-white rounded-[16px] shadow-[0_18px_50px_rgba(0,0,0,0.18)] px-5 py-4 max-w-[280px]">
+          <div className="absolute bottom-6 left-4 lg:-left-6 bg-white rounded-[16px] shadow-[0_18px_50px_rgba(0,0,0,0.18)] ring-1 ring-black/5 px-5 py-4 max-w-[280px]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden bg-[#F9F6EE]">
                 <Image
@@ -82,9 +91,9 @@ export default function Hero() {
               </div>
               <div className="flex flex-col">
                 <p className="font-dm-sans font-semibold text-[#1A1A1A] leading-tight">
-                  Tunde Adeyemi, Ogun State
+                  Tunde, Ogun State
                 </p>
-                <p className="font-dm-mono text-[12px] text-[#1A1A1A] mt-1">
+                <p className="font-dm-mono text-[12px] text-[#008528] mt-1">
                   ✓ Verified Partner Farmer
                 </p>
               </div>
