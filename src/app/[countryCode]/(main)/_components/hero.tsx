@@ -19,13 +19,12 @@ export default function Hero() {
             </p>
 
             <h1 className="font-fraunces text-[#006b2f] text-[44px] leading-[1.02] mt-4 lg:text-[72px]">
-              Fresh from the farm. Delivered to your door.
+              Sourced from the farm. Fresh to your door.
             </h1>
 
             <p className="font-dm-sans text-[18px] leading-[1.6] text-[#1A1A1A] mt-6 max-w-[480px]">
-              Abundish connects you directly with Nigerian farmers — no
-              middlemen, no mystery. Just honest, traceable food at its peak
-              freshness.
+            Abundish partners with verified Nigerian farms to bring you fresh,
+            quality produce. Stored at our facility and delivered with full traceability.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mt-10">
