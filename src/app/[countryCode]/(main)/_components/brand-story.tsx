@@ -62,36 +62,6 @@ export default function BrandStory() {
             </a>
           </div>
         </div>
-
-        {/* Stats band */}
-        <div className="mt-10 w-full bg-[#D6E8D0]/60 rounded-none py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-[900px] mx-auto px-6">
-            <div className="text-center">
-              <p className="font-fraunces text-[#FFCC00] text-[52px] sm:text-[64px] leading-[0.9]">
-                500+
-              </p>
-              <p className="font-dm-sans text-[#1A1A1A] text-[16px]">
-                Verified Farmers
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="font-fraunces text-[#FFCC00] text-[52px] sm:text-[64px] leading-[0.9]">
-                20+
-              </p>
-              <p className="font-dm-sans text-[#1A1A1A] text-[16px]">
-                Fresh Categories
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="font-fraunces text-[#FFCC00] text-[52px] sm:text-[64px] leading-[0.9]">
-                24hr
-              </p>
-              <p className="font-dm-sans text-[#1A1A1A] text-[16px]">
-                Max Farm-to-Door
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )

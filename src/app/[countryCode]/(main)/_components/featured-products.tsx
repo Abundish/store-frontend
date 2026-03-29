@@ -27,8 +27,8 @@ export default async function FeaturedProducts({
     queryParams: {
       limit: 8,
       fields:
-        "*variants.calculated_price,+variants.inventory_quantity,*variants.images,+metadata,+tags,*images,thumbnail",
-    } as any,
+        "handle,*variants.calculated_price,+variants.inventory_quantity,*variants.images,+metadata,+tags,*images,thumbnail",
+    } as any, 
   })
 
   return (

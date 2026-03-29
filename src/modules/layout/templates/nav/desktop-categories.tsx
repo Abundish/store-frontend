@@ -117,6 +117,16 @@ export default function DesktopCategoriesMenu({
             transform: translateY(0);
           }
         }
+
+        .categories-dropdown::before {
+          content: "";
+          position: absolute;
+          top: -12px;
+          left: 0;
+          right: 0;
+          height: 12px;
+          background: transparent;
+        }
       `}</style>
     </div>
   )

@@ -4,7 +4,6 @@ import { getRegion } from "@lib/data/regions"
 import BrandStory from "./_components/brand-story"
 import CategoriesShowcase from "./_components/categories-showcase"
 import FAQ from "./_components/faq"
-import FarmerSpotlight from "./_components/farmer-spotlight"
 import FeaturedProducts from "./_components/featured-products"
 import Hero from "./_components/hero"
 import HowItWorks from "./_components/how-it-works"
@@ -37,7 +36,6 @@ export default async function Home(props: {
       <FeaturedProducts region={region} />
       <BrandStory />
       <CategoriesShowcase />
-      <FarmerSpotlight />
       <Testimonials />
       <FAQ />
       <Newsletter />
