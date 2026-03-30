@@ -6,109 +6,105 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 export function Pagination({
   page,
   totalPages,
-  'data-testid': dataTestid
+  "data-testid": dataTestid,
 }: {
   page: number
   totalPages: number
-  'data-testid'?: string
+  "data-testid"?: string
 }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Helper function to generate an array of numbers within a range
-  const arrayRange = (start: number, stop: number) =>
-    Array.from({ length: stop - start + 1 }, (_, index) => start + index)
-
-  // Function to handle page changes
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams)
     params.set("page", newPage.toString())
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  // Function to render a page button
-  const renderPageButton = (
-    p: number,
-    label: string | number,
-    isCurrent: boolean
-  ) => (
-    <button
-      key={p}
-      className={clx("txt-xlarge-plus text-ui-fg-muted", {
-        "text-ui-fg-base hover:text-ui-fg-subtle": isCurrent,
-      })}
-      disabled={isCurrent}
-      onClick={() => handlePageChange(p)}
-    >
-      {label}
-    </button>
-  )
+  const arrayRange = (start: number, stop: number) =>
+    Array.from({ length: stop - start + 1 }, (_, i) => start + i)
 
-  // Function to render ellipsis
-  const renderEllipsis = (key: string) => (
+  const renderDot = (key: string) => (
     <span
       key={key}
-      className="txt-xlarge-plus text-ui-fg-muted items-center cursor-default"
+      className="w-9 h-9 flex items-center justify-center font-dm-mono text-[14px] text-[#7A9B7A]"
     >
-      ...
+      ···
     </span>
   )
 
-  // Function to render page buttons based on the current page and total pages
-  const renderPageButtons = () => {
-    const buttons = []
+  const renderPage = (p: number, isCurrent: boolean) => (
+    <button
+      key={p}
+      onClick={() => handlePageChange(p)}
+      disabled={isCurrent}
+      className={clx(
+        "w-9 h-9 rounded-full font-dm-mono text-[14px] transition-all duration-150",
+        isCurrent
+          ? "bg-[#006b2f] text-white cursor-default"
+          : "text-[#4A7A4A] hover:bg-[#EEF3EC] hover:text-[#006b2f]"
+      )}
+    >
+      {p}
+    </button>
+  )
+
+  const renderButtons = () => {
+    const buttons: React.ReactNode[] = []
 
     if (totalPages <= 7) {
-      // Show all pages
-      buttons.push(
-        ...arrayRange(1, totalPages).map((p) =>
-          renderPageButton(p, p, p === page)
-        )
+      arrayRange(1, totalPages).forEach((p) =>
+        buttons.push(renderPage(p, p === page))
+      )
+    } else if (page <= 4) {
+      arrayRange(1, 5).forEach((p) => buttons.push(renderPage(p, p === page)))
+      buttons.push(renderDot("e1"))
+      buttons.push(renderPage(totalPages, totalPages === page))
+    } else if (page >= totalPages - 3) {
+      buttons.push(renderPage(1, 1 === page))
+      buttons.push(renderDot("e2"))
+      arrayRange(totalPages - 4, totalPages).forEach((p) =>
+        buttons.push(renderPage(p, p === page))
       )
     } else {
-      // Handle different cases for displaying pages and ellipses
-      if (page <= 4) {
-        // Show 1, 2, 3, 4, 5, ..., lastpage
-        buttons.push(
-          ...arrayRange(1, 5).map((p) => renderPageButton(p, p, p === page))
-        )
-        buttons.push(renderEllipsis("ellipsis1"))
-        buttons.push(
-          renderPageButton(totalPages, totalPages, totalPages === page)
-        )
-      } else if (page >= totalPages - 3) {
-        // Show 1, ..., lastpage - 4, lastpage - 3, lastpage - 2, lastpage - 1, lastpage
-        buttons.push(renderPageButton(1, 1, 1 === page))
-        buttons.push(renderEllipsis("ellipsis2"))
-        buttons.push(
-          ...arrayRange(totalPages - 4, totalPages).map((p) =>
-            renderPageButton(p, p, p === page)
-          )
-        )
-      } else {
-        // Show 1, ..., page - 1, page, page + 1, ..., lastpage
-        buttons.push(renderPageButton(1, 1, 1 === page))
-        buttons.push(renderEllipsis("ellipsis3"))
-        buttons.push(
-          ...arrayRange(page - 1, page + 1).map((p) =>
-            renderPageButton(p, p, p === page)
-          )
-        )
-        buttons.push(renderEllipsis("ellipsis4"))
-        buttons.push(
-          renderPageButton(totalPages, totalPages, totalPages === page)
-        )
-      }
+      buttons.push(renderPage(1, 1 === page))
+      buttons.push(renderDot("e3"))
+      arrayRange(page - 1, page + 1).forEach((p) =>
+        buttons.push(renderPage(p, p === page))
+      )
+      buttons.push(renderDot("e4"))
+      buttons.push(renderPage(totalPages, totalPages === page))
     }
 
     return buttons
   }
 
-  // Render the component
   return (
-    <div className="flex justify-center w-full mt-12">
-      <div className="flex gap-3 items-end" data-testid={dataTestid}>{renderPageButtons()}</div>
+    <div className="flex justify-center w-full mt-16" data-testid={dataTestid}>
+      <div className="flex items-center gap-1">
+        {/* Prev */}
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+          className="w-9 h-9 rounded-full flex items-center justify-center text-[#4A7A4A] hover:bg-[#EEF3EC] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150"
+          aria-label="Previous page"
+        >
+          ←
+        </button>
+
+        {renderButtons()}
+
+        {/* Next */}
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === totalPages}
+          className="w-9 h-9 rounded-full flex items-center justify-center text-[#4A7A4A] hover:bg-[#EEF3EC] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150"
+          aria-label="Next page"
+        >
+          →
+        </button>
+      </div>
     </div>
   )
 }
