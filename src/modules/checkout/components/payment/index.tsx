@@ -1,7 +1,7 @@
 "use client"
 
 import { RadioGroup } from "@headlessui/react"
-import { isStripeLike, paymentInfoMap } from "@lib/constants"
+import { isStripeLike, isPaystack, paymentInfoMap } from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
@@ -38,13 +38,20 @@ const Payment = ({
 
   const isOpen = searchParams.get("step") === "payment"
 
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams)
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
   const setPaymentMethod = async (method: string) => {
     setError(null)
     setSelectedPaymentMethod(method)
     if (isStripeLike(method)) {
-      await initiatePaymentSession(cart, {
-        provider_id: method,
-      })
+      await initiatePaymentSession(cart, { provider_id: method })
     }
   }
 
@@ -54,16 +61,6 @@ const Payment = ({
   const paymentReady =
     (activeSession && cart?.shipping_methods.length !== 0) || paidByGiftcard
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams)
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams]
-  )
-
   const handleEdit = () => {
     router.push(pathname + "?" + createQueryString("step", "payment"), {
       scroll: false,
@@ -72,25 +69,66 @@ const Payment = ({
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    try {
-      const shouldInputCard =
-        isStripeLike(selectedPaymentMethod) && !activeSession
+    setError(null)
 
+    try {
       const checkActiveSession =
         activeSession?.provider_id === selectedPaymentMethod
 
+      // --- PAYSTACK FLOW ---
+      if (isPaystack(selectedPaymentMethod)) {
+        // Always initiate/re-initiate to get a fresh access code
+        const resp = await initiatePaymentSession(cart, {
+          provider_id: selectedPaymentMethod,
+          data: { email: cart.email }, // Paystack requires email
+        })
+
+        const session =
+          resp?.payment_collection?.payment_sessions?.find(
+            (s: any) => s.provider_id === selectedPaymentMethod
+          )
+
+        const accessCode = session?.data?.paystackTxAccessCode as string
+
+        if (!accessCode) {
+          setError("Could not initialize Paystack payment. Please try again.")
+          return
+        }
+
+        // Dynamically import to avoid SSR issues
+        const PaystackPop = (await import("@paystack/inline-js")).default
+        const popup = new PaystackPop()
+
+        popup.resumeTransaction({
+          accessCode,
+          onSuccess: () => {
+            router.push(
+              pathname + "?" + createQueryString("step", "review"),
+              { scroll: false }
+            )
+          },
+          onCancel: () => {
+            setError("Payment was cancelled. Please try again.")
+          },
+        })
+
+        return // Don't fall through to the router.push below
+      }
+
+      // --- ALL OTHER PROVIDERS (Stripe, Manual, etc.) ---
       if (!checkActiveSession) {
         await initiatePaymentSession(cart, {
           provider_id: selectedPaymentMethod,
         })
       }
 
+      const shouldInputCard =
+        isStripeLike(selectedPaymentMethod) && !activeSession
+
       if (!shouldInputCard) {
-        return router.push(
+        router.push(
           pathname + "?" + createQueryString("step", "review"),
-          {
-            scroll: false,
-          }
+          { scroll: false }
         )
       }
     } catch (err: any) {
@@ -132,36 +170,36 @@ const Payment = ({
           </Text>
         )}
       </div>
+
       <div>
         <div className={isOpen ? "block" : "hidden"}>
           {!paidByGiftcard && availablePaymentMethods?.length && (
-            <>
-              <RadioGroup
-                value={selectedPaymentMethod}
-                onChange={(value: string) => setPaymentMethod(value)}
-              >
-                {availablePaymentMethods.map((paymentMethod) => (
-                  <div key={paymentMethod.id}>
-                    {isStripeLike(paymentMethod.id) ? (
-                      <StripeCardContainer
-                        paymentProviderId={paymentMethod.id}
-                        selectedPaymentOptionId={selectedPaymentMethod}
-                        paymentInfoMap={paymentInfoMap}
-                        setCardBrand={setCardBrand}
-                        setError={setError}
-                        setCardComplete={setCardComplete}
-                      />
-                    ) : (
-                      <PaymentContainer
-                        paymentInfoMap={paymentInfoMap}
-                        paymentProviderId={paymentMethod.id}
-                        selectedPaymentOptionId={selectedPaymentMethod}
-                      />
-                    )}
-                  </div>
-                ))}
-              </RadioGroup>
-            </>
+            <RadioGroup
+              value={selectedPaymentMethod}
+              onChange={(value: string) => setPaymentMethod(value)}
+            >
+              {availablePaymentMethods.map((paymentMethod) => (
+                <div key={paymentMethod.id}>
+                  {isStripeLike(paymentMethod.id) ? (
+                    <StripeCardContainer
+                      paymentProviderId={paymentMethod.id}
+                      selectedPaymentOptionId={selectedPaymentMethod}
+                      paymentInfoMap={paymentInfoMap}
+                      setCardBrand={setCardBrand}
+                      setError={setError}
+                      setCardComplete={setCardComplete}
+                    />
+                  ) : (
+                    // Paystack, Manual, PayPal, etc. all use the generic container
+                    <PaymentContainer
+                      paymentInfoMap={paymentInfoMap}
+                      paymentProviderId={paymentMethod.id}
+                      selectedPaymentOptionId={selectedPaymentMethod}
+                    />
+                  )}
+                </div>
+              ))}
+            </RadioGroup>
           )}
 
           {paidByGiftcard && (
@@ -195,8 +233,10 @@ const Payment = ({
             data-testid="submit-payment-button"
           >
             {!activeSession && isStripeLike(selectedPaymentMethod)
-              ? " Enter card details"
-              : "Continue to review"}
+              ? "Enter card details"
+              : isPaystack(selectedPaymentMethod)
+                ? "Pay with Paystack"
+                : "Continue to review"}
           </Button>
         </div>
 
