@@ -63,6 +63,7 @@ export default async function FeaturedProducts({
             const variantId = product.variants?.[0]?.id ?? null
             const isFresh = Boolean((product.metadata as any)?.isFresh)
 
+            
             return (
               <FeaturedProductCard
                 key={product.id}

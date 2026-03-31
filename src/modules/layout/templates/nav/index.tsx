@@ -54,7 +54,7 @@ export default async function Nav({ cartCount = 0 }: { cartCount?: number }) {
 
             <LocalizedClientLink
               href="/"
-              className="inline-flex items-center min-w-0"
+              className="inline-flex items-center min-w-0 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
               aria-label="Abundish home"
             >
               <Image
