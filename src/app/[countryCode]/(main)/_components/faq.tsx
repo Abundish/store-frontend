@@ -16,11 +16,7 @@ export default function FAQ() {
           <h2 className="font-fraunces text-[#006b2f] text-[32px] sm:text-[40px]">
             Got questions?
           </h2>
-          <p className="font-dm-sans text-[16px] leading-[1.7] text-[#1A1A1A] mt-3">
-            We keep it transparent — just like our supply chain.
-          </p>
-
-          <div className="mt-8 flex flex-col">
+          <div className="mt-4 flex flex-col">
             {items.map((item, idx) => {
               const isOpen = openIndex === idx
               const panelId = `faq-panel-${idx}`

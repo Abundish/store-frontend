@@ -1,19 +1,9 @@
 import { listProducts } from "@lib/data/products"
-import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
-import FeaturedProductCard from "./featured-product-card"
-
-function resolveProductImage(product: HttpTypes.StoreProduct): string | null {
-  return (
-    product.thumbnail ??
-    product.images?.[0]?.url ??
-    product.variants?.[0]?.images?.[0]?.url ??
-    null
-  )
-}
+import ProductPreview from "@modules/products/components/product-preview"
 
 export default async function FeaturedProducts({
   region,
@@ -56,23 +46,8 @@ export default async function FeaturedProducts({
 
         <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-6">
           {products?.map((product) => {
-            const { cheapestPrice } = getProductPrice({
-              product,
-            })
-
-            const variantId = product.variants?.[0]?.id ?? null
-            const isFresh = Boolean((product.metadata as any)?.isFresh)
-
-            
             return (
-              <FeaturedProductCard
-                key={product.id}
-                product={product}
-                price={cheapestPrice?.calculated_price ?? null}
-                imageUrl={resolveProductImage(product)}
-                isFresh={isFresh}
-                variantId={variantId}
-              />
+              <ProductPreview key={product.id} product={product} region={region} />
             )
           })}
         </div>
