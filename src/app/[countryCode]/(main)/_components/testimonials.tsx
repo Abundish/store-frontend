@@ -25,16 +25,6 @@ export default function Testimonials() {
               </p>
 
               <div className="mt-auto pt-6 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-[#D6E8D0] shrink-0">
-                  <Image
-                    src={t.avatarUrl}
-                    alt={`${t.name} avatar`}
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-cover"
-                    draggable={false}
-                  />
-                </div>
                 <div className="flex flex-col">
                   <p className="font-dm-sans font-semibold text-[14px]">
                     {t.name}
