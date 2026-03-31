@@ -9,13 +9,13 @@ function CategoryCard({
 }: {
   category: HttpTypes.StoreProductCategory
 }) {
-  const imageUrl = `/category-images/${category.name}.png`
+  const imageUrl = `/category-images/${category.name.replaceAll(' ', '')}.png`
 
   return (
     <LocalizedClientLink
       href={`/categories/${category.handle}`}
       aria-label={`Shop ${category.name}`}
-      className="group relative flex-none w-[260px] h-[160px] rounded-[18px] overflow-hidden block"
+      className="group relative flex-none w-[260px] h-[130px] rounded-[18px] overflow-hidden block"
     >
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-[1.06]"
