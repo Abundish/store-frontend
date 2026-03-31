@@ -9,8 +9,8 @@ export default function BrandStory() {
           {/* Image */}
           <div className="relative flex-1 min-h-[320px] md:min-h-[520px] overflow-hidden rounded-none md:rounded-tr-[16px] md:rounded-br-[16px]">
             <Image
-              src="https://images.unsplash.com/photo-1524594154908-edd198179e22?auto=format&fit=crop&w=2000&q=80"
-              alt="Farm hands sorting fresh produce"
+              src="/abundish-marketplace.png"
+              alt="Abundish Marketplace"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"

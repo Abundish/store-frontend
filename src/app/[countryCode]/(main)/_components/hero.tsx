@@ -47,11 +47,13 @@ export default function Hero() {
               </a>
             </div>
 
-            <div className="flex items-center gap-4 mt-10 font-dm-mono text-[12px] text-[#008528] uppercase tracking-wide">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-10 font-dm-mono text-[12px] text-[#008528] uppercase tracking-wide">
               <span>🌿 100% Farm Direct</span>
-              <span className="text-[#1A1A1A]/40">|</span>
+              <span className="text-[#1A1A1A]/40 hidden sm:inline">|</span>
+
               <span>⚡ Same-Day Delivery</span>
-              <span className="text-[#1A1A1A]/40">|</span>
+              <span className="text-[#1A1A1A]/40 hidden sm:inline">|</span>
+
               <span>📍 Lagos</span>
             </div>
           </div>
