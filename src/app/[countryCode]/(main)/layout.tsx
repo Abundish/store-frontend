@@ -24,9 +24,12 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
     shippingOptions = shipping_options
   }
 
+  const cartCount =
+    cart?.items?.reduce((acc, item) => acc + (item.quantity ?? 0), 0) ?? 0
+
   return (
     <>
-      <Nav />
+      <Nav cartCount={cartCount}/>
       {customer && cart && (
         <CartMismatchBanner customer={customer} cart={cart} />
       )}

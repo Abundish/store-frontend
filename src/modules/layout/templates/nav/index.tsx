@@ -21,7 +21,7 @@ type CategoryNavItem = {
   children?: CategoryChild[] | null
 }
 
-export default async function Nav() {
+export default async function Nav({ cartCount = 0 }: { cartCount?: number }) {
   const productCategories = await listCategories()
   const topLevelCategories: CategoryNavItem[] =
     productCategories
@@ -118,7 +118,14 @@ export default async function Nav() {
               href="/cart"
               className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
             >
-              <ShoppingCart size={18} />
+              <span className="relative">
+                <ShoppingCart size={18} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 min-w-[17px] h-[17px] rounded-full bg-[#FFCC00] text-[#1A3B1A] font-dm-mono text-[10px] font-semibold flex items-center justify-center px-[3px] leading-none">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
+              </span>
             </LocalizedClientLink>
           </div>
         </div>

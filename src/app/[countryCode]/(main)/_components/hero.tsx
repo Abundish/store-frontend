@@ -14,17 +14,13 @@ export default function Hero() {
           </div>
 
           <div className="relative z-10 max-w-[560px]">
-            <p className="font-dm-mono text-[#008528] uppercase tracking-[0.14em] text-xs">
-              Farm · Fork · Future
-            </p>
-
             <h1 className="font-fraunces text-[#006b2f] text-[44px] leading-[1.02] mt-4 lg:text-[72px]">
               Sourced from the farm. Fresh to your door.
             </h1>
 
             <p className="font-dm-sans text-[18px] leading-[1.6] text-[#1A1A1A] mt-6 max-w-[480px]">
-            Abundish partners with verified Nigerian farms to bring you fresh,
-            quality produce. Stored at our facility and delivered with full traceability.
+              Abundish partners with verified Nigerian farms to bring you fresh,
+              quality produce. Stored at our facility and delivered with full traceability.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mt-10">
@@ -72,31 +68,6 @@ export default function Hero() {
               priority
               className="object-cover object-center"
             />
-          </div>
-
-          <div className="absolute inset-0 bg-[#FFCC00]/10 mix-blend-multiply" />
-
-          {/* Floating partner card */}
-          <div className="absolute bottom-6 left-4 lg:-left-6 bg-white rounded-[16px] shadow-[0_18px_50px_rgba(0,0,0,0.18)] ring-1 ring-black/5 px-5 py-4 max-w-[280px]">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-[#F9F6EE]">
-                <Image
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=128&h=128&q=80"
-                  alt="Verified partner farmer portrait"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col">
-                <p className="font-dm-sans font-semibold text-[#1A1A1A] leading-tight">
-                  Tunde, Ogun State
-                </p>
-                <p className="font-dm-mono text-[12px] text-[#008528] mt-1">
-                  ✓ Verified Partner Farmer
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
