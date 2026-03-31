@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 import { testimonialsData } from "../_data/testimonials-data"
 
 export default function Testimonials() {
