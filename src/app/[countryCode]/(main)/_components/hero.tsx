@@ -48,8 +48,8 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-10 font-dm-mono text-[12px] text-[#008528] uppercase tracking-wide">
-              <span>🌿 100% Farm Direct</span>
-              <span className="text-[#1A1A1A]/40 inline">|</span>
+              <span className="hidden sm:inline">🌿 100% Farm Direct</span>
+              <span className="text-[#1A1A1A]/40 hidden sm:inline">|</span>
 
               <span>⚡ Same-Day Delivery</span>
               <span className="text-[#1A1A1A]/40 inline">|</span>
