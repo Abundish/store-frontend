@@ -117,14 +117,6 @@ export default async function Footer() {
                   FAQs
                 </LocalizedClientLink>
               </li>
-              <li>
-                <LocalizedClientLink
-                  href="/careers"
-                  className="font-dm-sans text-[14px] text-white/70 hover:text-white transition"
-                >
-                  Careers
-                </LocalizedClientLink>
-              </li>
             </ul>
           </div>
 
