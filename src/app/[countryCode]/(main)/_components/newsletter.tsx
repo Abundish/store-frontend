@@ -5,80 +5,110 @@ import { useState } from "react"
 export default function Newsletter() {
   const [email, setEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-
     setIsSubmitting(true)
-    setMessage(null)
+    setError(null)
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
-
-      if (!res.ok) {
-        throw new Error("Subscription failed")
-      }
-
-      setMessage("Thanks! Watch your inbox for weekly harvest updates.")
+      if (!res.ok) throw new Error()
+      setSubmitted(true)
       setEmail("")
-    } catch (err) {
-      setMessage("Something went wrong. Please try again.")
+    } catch {
+      setError("Something went wrong. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <section className="w-full bg-[#FFCC00] py-12 lg:py-16">
+    <section className="w-full bg-[#0D3D20] py-16 lg:py-24">
       <div className="max-w-[1100px] mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-          <div>
-            <h2 className="font-fraunces text-[#006b2f] text-[32px] lg:text-[36px] leading-[1.1]">
-              Eat fresh. Stay informed.
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+
+          {/* Left — copy */}
+          <div className="flex flex-col gap-4 max-w-[480px]">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-px bg-[#FFCC00]" />
+              <p className="font-dm-mono text-[#FFCC00] text-[11px] uppercase tracking-[0.16em]">
+                Stay in the loop
+              </p>
+            </div>
+
+            <h2 className="font-fraunces text-white text-[36px] lg:text-[48px] leading-[1.08]">
+              Eat fresh.<br />Stay informed.
             </h2>
-            <p className="font-dm-sans text-[16px] leading-[1.7] text-[#1A1A1A] mt-3">
-              Get weekly harvest updates, seasonal recipes, and exclusive deals.
+
+            <p className="font-dm-sans text-[#A8C8A8] text-[15px] leading-[1.75]">
+              Weekly harvest updates, seasonal recipes,<br className="hidden sm:block" /> and exclusive deals — straight to your inbox.
             </p>
           </div>
 
-          <form
-            onSubmit={onSubmit}
-            className="w-full lg:w-[520px]"
-            aria-label="Newsletter subscribe form"
-          >
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-0">
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                required
-                placeholder="Your email address"
-                className="h-[48px] flex-1 rounded-l-full bg-white px-5 outline-none border border-[#006b2f]/10 font-dm-sans text-[#1A1A1A]"
-                aria-label="Email address"
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="h-[48px] sm:w-[180px] rounded-r-full bg-[#006b2f] text-white font-dm-sans font-semibold hover:brightness-95 transition disabled:opacity-60"
-              >
-                {isSubmitting ? "Subscribing..." : "Subscribe"}
-              </button>
-            </div>
+          {/* Right — form */}
+          <div className="w-full lg:w-[420px]">
+            {submitted ? (
+              <div className="flex flex-col gap-3">
+                <div className="w-8 h-px bg-[#FFCC00]" />
+                <p className="font-fraunces text-white text-[22px] leading-snug">
+                  You're on the list.
+                </p>
+                <p className="font-dm-sans text-[#A8C8A8] text-[14px]">
+                  Watch your inbox for your first harvest update.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={onSubmit} aria-label="Newsletter subscribe form">
+                {/* Underline input row */}
+                <div className="flex items-end gap-4 border-b border-[#2E6640] pb-3 focus-within:border-[#FFCC00] transition-colors duration-200">
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    required
+                    placeholder="Your email address"
+                    className="
+                      flex-1 bg-transparent outline-none
+                      font-dm-sans text-white text-[16px] placeholder:text-[#4A7A5A]
+                      pb-1
+                    "
+                    aria-label="Email address"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="
+                      shrink-0 font-dm-mono text-[11px] uppercase tracking-[0.14em]
+                      text-[#FFCC00] hover:text-white transition-colors duration-150
+                      disabled:opacity-50 pb-1 whitespace-nowrap
+                    "
+                  >
+                    {isSubmitting ? "Sending..." : "Subscribe →"}
+                  </button>
+                </div>
 
-            {message && (
-              <p className="mt-3 font-dm-sans text-[14px] text-[#1A1A1A]/80">
-                {message}
-              </p>
+                {error && (
+                  <p className="mt-3 font-dm-sans text-[13px] text-[#F08080]">
+                    {error}
+                  </p>
+                )}
+
+                <p className="mt-4 font-dm-mono text-[#4A7A5A] text-[11px] uppercase tracking-wide">
+                  No spam. Unsubscribe anytime.
+                </p>
+              </form>
             )}
-          </form>
+          </div>
         </div>
       </div>
     </section>
   )
 }
-
