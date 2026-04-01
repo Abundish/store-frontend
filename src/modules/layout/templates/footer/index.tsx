@@ -30,7 +30,7 @@ export default async function Footer() {
             </p>
             <div className="flex items-center gap-4 mt-1">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/_abundish/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
@@ -39,7 +39,7 @@ export default async function Footer() {
                 <Instagram size={20} />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/_abundish"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Twitter/X"
@@ -48,7 +48,7 @@ export default async function Footer() {
                 <Twitter size={20} />
               </a>
               <a
-                href="https://facebook.com"
+                href="https://web.facebook.com/people/Abundish/61560749763098/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
@@ -57,7 +57,7 @@ export default async function Footer() {
                 <Facebook size={20} />
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/abundish"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
@@ -74,7 +74,7 @@ export default async function Footer() {
               Categories
             </p>
             <ul className="flex flex-col gap-2">
-              {topLevelCategories.slice(0, 8).map((c) => (
+              {topLevelCategories.map((c) => (
                 <li key={c.id}>
                   <LocalizedClientLink
                     href={`/categories/${c.handle}`}
