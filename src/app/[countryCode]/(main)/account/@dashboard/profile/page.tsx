@@ -1,11 +1,8 @@
 import { Metadata } from "next"
-
 import ProfilePhone from "@modules/account//components/profile-phone"
 import ProfileBillingAddress from "@modules/account/components/profile-billing-address"
 import ProfileEmail from "@modules/account/components/profile-email"
 import ProfileName from "@modules/account/components/profile-name"
-import ProfilePassword from "@modules/account/components/profile-password"
-
 import { notFound } from "next/navigation"
 import { listRegions } from "@lib/data/regions"
 import { retrieveCustomer } from "@lib/data/customer"
@@ -19,36 +16,27 @@ export default async function Profile() {
   const customer = await retrieveCustomer()
   const regions = await listRegions()
 
-  if (!customer || !regions) {
-    notFound()
-  }
+  if (!customer || !regions) notFound()
 
   return (
     <div className="w-full" data-testid="profile-page-wrapper">
-      <div className="mb-8 flex flex-col gap-y-4">
-        <h1 className="text-2xl-semi">Profile</h1>
-        <p className="text-base-regular">
-          View and update your profile information, including your name, email,
-          and phone number. You can also update your billing address, or change
-          your password.
+      {/* Page header */}
+      <div className="mb-8">
+        <p className="font-dm-mono text-[#7A9B7A] text-[10px] uppercase tracking-[0.14em] mb-1">
+          Account
         </p>
+        <h1 className="font-fraunces text-[#1A3B1A] text-[32px] leading-tight mb-1">
+          Profile
+        </h1>
+        <div className="w-8 h-[2px] bg-[#FFCC00] rounded-full" />
       </div>
-      <div className="flex flex-col gap-y-8 w-full">
+
+      <div className="flex flex-col gap-y-4 w-full">
         <ProfileName customer={customer} />
-        <Divider />
         <ProfileEmail customer={customer} />
-        <Divider />
         <ProfilePhone customer={customer} />
-        <Divider />
-        {/* <ProfilePassword customer={customer} />
-        <Divider /> */}
         <ProfileBillingAddress customer={customer} regions={regions} />
       </div>
     </div>
   )
 }
-
-const Divider = () => {
-  return <div className="w-full h-px bg-gray-200" />
-}
-;``

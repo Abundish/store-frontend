@@ -1,8 +1,8 @@
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
-const WHATSAPP_NUMBER = "2348000000000"
-const PHONE_DISPLAY = "+234 800 000 0000"
-const EMAIL = "hello@abundish.info"
+const WHATSAPP_NUMBER = "2349127467870"
+const PHONE_DISPLAY = "+234 912 746 7870"
+const EMAIL = "abundishappstores@gmail.com"
 
 export default function ContactPage() {
     return (

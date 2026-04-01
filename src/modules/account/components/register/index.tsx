@@ -12,24 +12,20 @@ type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void
 }
 
-
 const Register = ({ setCurrentView }: Props) => {
   const [message, formAction] = useActionState(signup, null)
 
   return (
-    <div
-      className="max-w-sm flex flex-col items-center"
-      data-testid="register-page"
-    >
-      <h1 className="text-large-semi uppercase mb-6">
-        Become an Abundish Member
+    <div className="flex flex-col" data-testid="register-page">
+      <h1 className="font-fraunces text-[#1A3B1A] text-[34px] leading-tight mb-2">
+        Join Abundish
       </h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Create your Abundish Member profile, and get access to an enhanced
-        shopping experience.
+      <p className="font-dm-sans text-[#3D5A3D] text-[15px] mb-8">
+        Create an account for a better shopping experience.
       </p>
-      <form className="w-full flex flex-col" action={formAction}>
-        <div className="flex flex-col w-full gap-y-2">
+
+      <form className="w-full flex flex-col gap-4" action={formAction}>
+        <div className="grid grid-cols-2 gap-3">
           <Input
             label="First name"
             name="first_name"
@@ -44,62 +40,62 @@ const Register = ({ setCurrentView }: Props) => {
             autoComplete="family-name"
             data-testid="last-name-input"
           />
-          <Input
-            label="Email"
-            name="email"
-            required
-            type="email"
-            autoComplete="email"
-            data-testid="email-input"
-          />
-          <Input
-            label="Phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            data-testid="phone-input"
-          />
-          <Input
-            label="Password"
-            name="password"
-            required
-            type="password"
-            autoComplete="new-password"
-            data-testid="password-input"
-          />
         </div>
+        <Input
+          label="Email"
+          name="email"
+          required
+          type="email"
+          autoComplete="email"
+          data-testid="email-input"
+        />
+        <Input
+          label="Phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          data-testid="phone-input"
+        />
+        <Input
+          label="Password"
+          name="password"
+          required
+          type="password"
+          autoComplete="new-password"
+          data-testid="password-input"
+        />
+
         <ErrorMessage error={message} data-testid="register-error" />
-        <span className="text-center text-ui-fg-base text-small-regular mt-6">
+
+        <p className="font-dm-sans text-[#7A9B7A] text-[12px] leading-relaxed mt-1">
           By creating an account, you agree to Abundish&apos;s{" "}
-          <LocalizedClientLink
-            href="/content/privacy-policy"
-            className="underline"
-          >
+          <LocalizedClientLink href="/content/privacy-policy" className="underline hover:text-[#006b2f]">
             Privacy Policy
           </LocalizedClientLink>{" "}
           and{" "}
-          <LocalizedClientLink
-            href="/content/terms-of-use"
-            className="underline"
-          >
+          <LocalizedClientLink href="/content/terms-of-use" className="underline hover:text-[#006b2f]">
             Terms of Use
           </LocalizedClientLink>
           .
-        </span>
-        <SubmitButton className="w-full mt-6" data-testid="register-button">
-          Join
+        </p>
+
+        <SubmitButton
+          className="w-full h-[50px] !rounded-full !bg-[#006b2f] hover:!bg-[#008528] !border-0 font-dm-sans font-semibold text-[15px] mt-2"
+          data-testid="register-button"
+        >
+          Create account
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
+
+      <p className="font-dm-sans text-[#3D5A3D] text-[13px] text-center mt-6">
         Already a member?{" "}
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
-          className="underline"
+          className="text-[#008528] font-semibold hover:underline"
         >
           Sign in
         </button>
-        .
-      </span>
+      </p>
     </div>
   )
 }
