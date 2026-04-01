@@ -1,7 +1,8 @@
+"use client"
+
 import { deleteLineItem } from "@lib/data/cart"
-import { Spinner, Trash } from "@medusajs/icons"
-import { clx } from "@medusajs/ui"
 import { useState } from "react"
+import { clx } from "@medusajs/ui"
 
 const DeleteButton = ({
   id,
@@ -14,28 +15,29 @@ const DeleteButton = ({
 }) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
     setIsDeleting(true)
-    await deleteLineItem(id).catch((err) => {
-      setIsDeleting(false)
-    })
+    await deleteLineItem(id).catch(() => setIsDeleting(false))
   }
 
   return (
-    <div
+    <button
+      onClick={handleDelete}
+      disabled={isDeleting}
       className={clx(
-        "flex items-center justify-between text-small-regular",
+        "flex items-center gap-1.5 font-dm-mono text-[10px] uppercase tracking-wide text-[#7A9B7A] hover:text-[#cc4400] transition-colors duration-150 disabled:opacity-40",
         className
       )}
     >
-      <button
-        className="flex gap-x-1 text-ui-fg-subtle hover:text-ui-fg-base cursor-pointer"
-        onClick={() => handleDelete(id)}
-      >
-        {isDeleting ? <Spinner className="animate-spin" /> : <Trash />}
-        <span>{children}</span>
-      </button>
-    </div>
+      {isDeleting ? (
+        <span className="w-3 h-3 border border-[#7A9B7A] border-t-transparent rounded-full animate-spin" />
+      ) : (
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      )}
+      {children ?? "Remove"}
+    </button>
   )
 }
 

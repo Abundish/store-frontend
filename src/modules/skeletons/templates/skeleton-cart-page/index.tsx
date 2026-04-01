@@ -1,60 +1,52 @@
-import { Table } from "@medusajs/ui"
-
 import repeat from "@lib/util/repeat"
-import SkeletonCartItem from "@modules/skeletons/components/skeleton-cart-item"
-import SkeletonCodeForm from "@modules/skeletons/components/skeleton-code-form"
-import SkeletonOrderSummary from "@modules/skeletons/components/skeleton-order-summary"
+import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
 
 const SkeletonCartPage = () => {
   return (
-    <div className="py-12">
-      <div className="content-container">
-        <div className="grid grid-cols-1 small:grid-cols-[1fr_360px] gap-x-40">
-          <div className="flex flex-col bg-white p-6 gap-y-6">
-            <div className="bg-white flex items-start justify-between">
-              <div className="flex flex-col gap-y-2">
-                <div className="w-60 h-8 bg-gray-200 animate-pulse" />
-                <div className="w-48 h-6 bg-gray-200 animate-pulse" />
-              </div>
-              <div>
-                <div className="w-14 h-8 bg-gray-200 animate-pulse" />
-              </div>
+    <div className="min-h-screen bg-[#F9F6EE]">
+      <div className="max-w-[1100px] mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 small:grid-cols-[1fr_360px] gap-x-16 gap-y-10">
+
+          {/* Left */}
+          <div className="flex flex-col gap-6">
+            {/* Header */}
+            <div className="flex items-end justify-between mb-2">
+              <div className="w-40 h-9 bg-[#D8E8D0] rounded animate-pulse" />
+              <div className="w-12 h-3 bg-[#D8E8D0] rounded animate-pulse" />
             </div>
-            <div>
-              <div className="pb-3 flex items-center">
-                <div className="w-20 h-12 bg-gray-200 animate-pulse" />
-              </div>
-              <Table>
-                <Table.Header className="border-t-0">
-                  <Table.Row>
-                    <Table.HeaderCell className="!pl-0">
-                      <div className="w-10 h-6 bg-gray-200 animate-pulse" />
-                    </Table.HeaderCell>
-                    <Table.HeaderCell></Table.HeaderCell>
-                    <Table.HeaderCell>
-                      <div className="w-16 h-6 bg-gray-200 animate-pulse" />
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      <div className="w-12 h-6 bg-gray-200 animate-pulse" />
-                    </Table.HeaderCell>
-                    <Table.HeaderCell className="!pr-0">
-                      <div className="flex justify-end">
-                        <div className="w-12 h-6 bg-gray-200 animate-pulse" />
-                      </div>
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {repeat(4).map((index) => (
-                    <SkeletonCartItem key={index} />
-                  ))}
-                </Table.Body>
-              </Table>
+            {/* Col labels */}
+            <div className="w-full h-px bg-[#D8E8D0]" />
+            {/* Items */}
+            <div className="flex flex-col divide-y divide-[#D8E8D0]">
+              {repeat(3).map((i) => (
+                <SkeletonLineItem key={i} />
+              ))}
             </div>
           </div>
-          <div className="flex flex-col gap-y-8">
-            <SkeletonOrderSummary />
-            <SkeletonCodeForm />
+
+          {/* Right — summary skeleton */}
+          <div className="bg-white rounded-[20px] border border-[#D8E8D0] px-6 py-6 flex flex-col gap-5">
+            <div className="flex items-center justify-between">
+              <div className="w-24 h-6 bg-[#D8E8D0] rounded animate-pulse" />
+              <div className="w-6 h-0.5 bg-[#FFCC00] rounded animate-pulse" />
+            </div>
+            <div className="w-full h-8 bg-[#EEF3EC] rounded-[10px] animate-pulse" />
+            <div className="w-full h-px bg-[#D8E8D0]" />
+            <div className="flex flex-col gap-3">
+              {repeat(3).map((i) => (
+                <div key={i} className="flex justify-between">
+                  <div className="w-24 h-3 bg-[#D8E8D0] rounded animate-pulse" />
+                  <div className="w-16 h-3 bg-[#D8E8D0] rounded animate-pulse" />
+                </div>
+              ))}
+              <div className="w-full h-px bg-[#D8E8D0] mt-1" />
+              <div className="flex justify-between">
+                <div className="w-16 h-5 bg-[#D8E8D0] rounded animate-pulse" />
+                <div className="w-20 h-5 bg-[#D8E8D0] rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="w-full h-px bg-[#D8E8D0]" />
+            <div className="w-full h-[52px] bg-[#D8E8D0] rounded-full animate-pulse" />
           </div>
         </div>
       </div>

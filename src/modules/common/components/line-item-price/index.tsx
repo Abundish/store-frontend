@@ -1,7 +1,6 @@
 import { getPercentageDiff } from "@lib/util/get-percentage-diff"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
-import { clx } from "@medusajs/ui"
 
 type LineItemPriceProps = {
   item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
@@ -9,54 +8,33 @@ type LineItemPriceProps = {
   currencyCode: string
 }
 
-const LineItemPrice = ({
-  item,
-  style = "default",
-  currencyCode,
-}: LineItemPriceProps) => {
+const LineItemPrice = ({ item, style = "default", currencyCode }: LineItemPriceProps) => {
   const { total, original_total } = item
-  const originalPrice = original_total
-  const currentPrice = total
-  const hasReducedPrice = currentPrice < originalPrice
+  const hasReducedPrice = total < original_total
 
   return (
-    <div className="flex flex-col gap-x-2 text-ui-fg-subtle items-end">
-      <div className="text-left">
-        {hasReducedPrice && (
-          <>
-            <p>
-              {style === "default" && (
-                <span className="text-ui-fg-subtle">Original: </span>
-              )}
-              <span
-                className="line-through text-ui-fg-muted"
-                data-testid="product-original-price"
-              >
-                {convertToLocale({
-                  amount: originalPrice,
-                  currency_code: currencyCode,
-                })}
-              </span>
-            </p>
-            {style === "default" && (
-              <span className="text-ui-fg-interactive">
-                -{getPercentageDiff(originalPrice, currentPrice || 0)}%
-              </span>
-            )}
-          </>
-        )}
+    <div className="flex flex-col items-end gap-0.5">
+      {hasReducedPrice && (
         <span
-          className={clx("text-base-regular", {
-            "text-ui-fg-interactive": hasReducedPrice,
-          })}
-          data-testid="product-price"
+          className="font-dm-mono text-[11px] text-[#7A9B7A] line-through"
+          data-testid="product-original-price"
         >
-          {convertToLocale({
-            amount: currentPrice,
-            currency_code: currencyCode,
-          })}
+          {convertToLocale({ amount: original_total, currency_code: currencyCode })}
         </span>
-      </div>
+      )}
+      <span
+        className={`font-dm-mono text-[14px] font-semibold ${
+          hasReducedPrice ? "text-[#cc4400]" : "text-[#1A3B1A]"
+        }`}
+        data-testid="product-price"
+      >
+        {convertToLocale({ amount: total, currency_code: currencyCode })}
+      </span>
+      {hasReducedPrice && style === "default" && (
+        <span className="font-dm-mono text-[10px] bg-[#FFCC00] text-[#1A3B1A] px-1.5 py-0.5 rounded-full">
+          -{getPercentageDiff(original_total, total)}%
+        </span>
+      )}
     </div>
   )
 }
