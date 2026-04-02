@@ -12,6 +12,7 @@ import {
   Menu,
   ArrowRight,
   Leaf,
+  Mail,
 } from "lucide-react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -33,6 +34,7 @@ const NAV_LINKS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/store", label: "Shop", icon: ShoppingBag },
   { href: "/#faq", label: "FAQs", icon: HelpCircle },
+    { href: "/contact", label: "Contact", icon: Mail },
   { href: "/store", label: "Search", icon: Search },
   { href: "/account", label: "Account", icon: User },
   { href: "/cart", label: "Cart", icon: ShoppingCart },
