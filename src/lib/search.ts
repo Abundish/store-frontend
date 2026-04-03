@@ -18,6 +18,7 @@ export type SearchProduct = {
 export async function searchProducts(query: string): Promise<SearchProduct[]> {
   if (!query.trim()) return []
 
+  
   const result = await client
     .index("products")
     .search<SearchProduct>(query, { limit: 8 })
