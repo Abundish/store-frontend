@@ -6,7 +6,6 @@ import {
   ShoppingBag,
   HelpCircle,
   User,
-  ShoppingCart,
   X,
   Menu,
   ArrowRight,
@@ -33,7 +32,6 @@ const NAV_LINKS = [
   { href: "/#faq", label: "FAQs", icon: HelpCircle },
   { href: "/contact", label: "Contact", icon: Mail },
   { href: "/account", label: "Account", icon: User },
-  { href: "/cart", label: "Cart", icon: ShoppingCart },
   { href: "/store", label: "Shop", icon: ShoppingBag },
 ]
 
