@@ -66,7 +66,6 @@ const Payment = ({
       scroll: false,
     })
   }
-
   const handleSubmit = async () => {
     setIsLoading(true)
     setError(null)
@@ -77,25 +76,23 @@ const Payment = ({
 
       // --- PAYSTACK FLOW ---
       if (isPaystack(selectedPaymentMethod)) {
-        // Always initiate/re-initiate to get a fresh access code
         const resp = await initiatePaymentSession(cart, {
           provider_id: selectedPaymentMethod,
-          data: { email: cart.email }, // Paystack requires email
+          data: { email: cart.email },
         })
 
-        const session =
-          resp?.payment_collection?.payment_sessions?.find(
-            (s: any) => s.provider_id === selectedPaymentMethod
-          )
+        const session = resp?.payment_collection?.payment_sessions?.find(
+          (s: any) => s.provider_id === selectedPaymentMethod
+        )
 
         const accessCode = session?.data?.paystackTxAccessCode as string
 
         if (!accessCode) {
           setError("Could not initialize Paystack payment. Please try again.")
+          setIsLoading(false)
           return
         }
 
-        // Dynamically import to avoid SSR issues
         const PaystackPop = (await import("@paystack/inline-js")).default
         const popup = new PaystackPop()
 
@@ -109,13 +106,15 @@ const Payment = ({
           },
           onCancel: () => {
             setError("Payment was cancelled. Please try again.")
+            setIsLoading(false)
           },
         })
 
-        return // Don't fall through to the router.push below
+        // Don't set isLoading false here — popup is async, user is still in flow
+        return
       }
 
-      // --- ALL OTHER PROVIDERS (Stripe, Manual, etc.) ---
+      // --- ALL OTHER PROVIDERS ---
       if (!checkActiveSession) {
         await initiatePaymentSession(cart, {
           provider_id: selectedPaymentMethod,
@@ -134,6 +133,7 @@ const Payment = ({
     } catch (err: any) {
       setError(err.message)
     } finally {
+      // Only runs for non-Paystack paths since Paystack returns early
       setIsLoading(false)
     }
   }
