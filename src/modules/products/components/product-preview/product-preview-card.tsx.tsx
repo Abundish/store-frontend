@@ -7,6 +7,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { useParams } from "next/navigation"
 import { useMemo, useState } from "react"
 import PreviewPrice from "./price"
+import VariantDropdown from "./variant-dropdown"
 
 type Props = {
   product: HttpTypes.StoreProduct
@@ -27,9 +28,7 @@ export default function ProductPreviewCard({
 }: Props) {
   const countryCode = useParams().countryCode as string
   const variants = product.variants ?? []
-    // Build a flat list of options for the select.
-  // If there's only one option dimension (e.g. "Weight"), each entry is one variant.
-  // We label by joining all option values so "1kg / Red" is human-readable.
+
   const variantOptions = useMemo(() => {
     return variants.map((v) => ({
       id: v.id!,
@@ -137,39 +136,16 @@ export default function ProductPreviewCard({
       {/* ── Non-linked region: variant selector + add to cart ── */}
       <div className="mt-3 px-1 flex flex-col gap-2">
         {/*
-          Variant selector — always rendered for uniform card height.
-          Hidden visually when there's only one variant but still occupies space.
+          Always rendered for uniform card height.
+          Invisible when single variant so layout stays identical.
         */}
-        <div className={singleVariant ? "invisible" : ""}>
-          <div className="relative">
-            <select
-              value={selectedVariantId}
-              onChange={(e) => setSelectedVariantId(e.target.value)}
-              disabled={singleVariant || isAdding}
-              className="
-                w-full appearance-none
-                bg-white border border-[#D4E6CE] rounded-full
-                px-4 py-2
-                font-dm-mono text-[12px] text-[#1A3B1A]
-                cursor-pointer
-                focus:outline-none focus:border-[#006b2f] focus:ring-1 focus:ring-[#006b2f]/20
-                transition-colors duration-150
-                pr-8
-              "
-            >
-              {variantOptions.map((v) => (
-                <option key={v.id} value={v.id} disabled={!v.inStock}>
-                  {v.label}{!v.inStock ? " — Out of stock" : ""}
-                </option>
-              ))}
-            </select>
-            {/* Custom chevron */}
-            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 4l4 4 4-4" stroke="#7A9B7A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
+        <div className={singleVariant ? "invisible" : ""} aria-hidden={singleVariant}>
+          <VariantDropdown
+            options={variantOptions}
+            selected={selectedVariantId}
+            onChange={setSelectedVariantId}
+            disabled={isAdding}
+          />
         </div>
 
         {/* Add to cart button */}
