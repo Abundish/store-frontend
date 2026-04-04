@@ -13,7 +13,6 @@ import {
   Leaf,
   Mail,
 } from "lucide-react"
-import SearchTrigger from "@modules/layout/components/search-trigger"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type CategoryChild = {
@@ -162,10 +161,7 @@ export default function MobileDrawer({
                     {label}
                   </LocalizedClientLink>
                 ))}
-                <SearchTrigger
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.06] text-white/90 hover:bg-white/10 transition-colors duration-150 font-dm-sans font-semibold text-[15px] w-full text-[#FFCC00]"
-                  label="Search"
-                />
+                
               </div>
 
               {/* Shop button below the 2-column grid */}

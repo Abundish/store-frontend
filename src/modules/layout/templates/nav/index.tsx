@@ -108,15 +108,10 @@ export default async function Nav({ cartCount = 0 }: { cartCount?: number }) {
 
             <DesktopCategoriesMenu categories={topLevelCategories} />
           </nav>
-          {/* Desktop right nav */}
-          <div className="hidden md:flex items-center gap-x-6 font-dm-sans">
+
+          {/* Right slot — search + cart on mobile & desktop, account desktop only */}
+          <div className="flex items-center gap-x-3 md:gap-x-6 font-dm-sans">
             <SearchTrigger />
-            <LocalizedClientLink
-              href="/account"
-              className="relative inline-flex items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
-            >
-              <User size={18} />
-            </LocalizedClientLink>
 
             <LocalizedClientLink
               href="/cart"
@@ -130,6 +125,13 @@ export default async function Nav({ cartCount = 0 }: { cartCount?: number }) {
                   </span>
                 )}
               </span>
+            </LocalizedClientLink>
+
+            <LocalizedClientLink
+              href="/account"
+              className="hidden md:inline-flex relative items-center text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
+            >
+              <User size={18} />
             </LocalizedClientLink>
           </div>
         </div>
