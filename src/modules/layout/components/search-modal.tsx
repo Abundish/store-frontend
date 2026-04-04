@@ -3,6 +3,7 @@
 import { searchProducts, SearchProduct } from "@lib/search"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState, useTransition } from "react"
+import { createPortal } from "react-dom"
 import Image from "next/image"
 import { Search, X, Loader2 } from "lucide-react"
 
@@ -11,9 +12,22 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
     const [results, setResults] = useState<SearchProduct[]>([])
     const [isEmpty, setIsEmpty] = useState(false)
     const [isPending, startTransition] = useTransition()
+    const [mounted, setMounted] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
     const { countryCode } = useParams() as { countryCode: string }
+
+    // Wait for client mount before portaling (avoid SSR mismatch)
+    useEffect(() => {
+        setMounted(true)
+        return () => setMounted(false)
+    }, [])
+
+    // Lock body scroll
+    useEffect(() => {
+        document.body.style.overflow = "hidden"
+        return () => { document.body.style.overflow = "" }
+    }, [])
 
     // Focus input on mount
     useEffect(() => {
@@ -51,16 +65,21 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         router.push(`/${countryCode}/products/${handle}`)
     }
 
-    return (
+    if (!mounted) return null
+
+    return createPortal(
         <>
             {/* Backdrop */}
             <div
-                className="fixed inset-0 z-[60] bg-[#1A3B1A]/40 backdrop-blur-sm"
+                className="fixed inset-0 z-[9998] bg-[#1A3B1A]/40 backdrop-blur-sm"
                 onClick={onClose}
             />
 
             {/* Modal */}
-            <div className="fixed top-[72px] left-1/2 -translate-x-1/2 z-[61] w-full max-w-[600px] px-4">
+            <div
+                className="fixed top-[72px] left-1/2 -translate-x-1/2 z-[9999] w-full max-w-[600px] px-4"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className="bg-white rounded-[20px] shadow-2xl overflow-hidden">
                     {/* Input row */}
                     <div className="flex items-center gap-3 px-5 py-4 border-b border-[#EEF3EC]">
@@ -94,7 +113,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                                         onClick={() => handleSelect(product.handle)}
                                         className="w-full flex items-center gap-4 px-5 py-3 hover:bg-[#F5FAF3] transition-colors duration-150 text-left"
                                     >
-                                        {/* Thumbnail */}
                                         <div className="w-12 h-12 rounded-[10px] bg-[#EEF3EC] overflow-hidden shrink-0 relative">
                                             {product.thumbnail ? (
                                                 <Image
@@ -112,8 +130,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                                                 </div>
                                             )}
                                         </div>
-
-                                        {/* Text */}
                                         <div className="flex flex-col gap-0.5 min-w-0">
                                             <span className="font-fraunces text-[15px] text-[#1A3B1A] truncate">
                                                 {product.title}
@@ -150,6 +166,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                     )}
                 </div>
             </div>
-        </>
+        </>,
+        document.body
     )
 }

@@ -5,7 +5,6 @@ import {
   Home,
   ShoppingBag,
   HelpCircle,
-  Search,
   User,
   ShoppingCart,
   X,
@@ -14,7 +13,7 @@ import {
   Leaf,
   Mail,
 } from "lucide-react"
-
+import SearchTrigger from "@modules/layout/components/search-trigger"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type CategoryChild = {
@@ -32,12 +31,11 @@ type CategoryNavItem = {
 
 const NAV_LINKS = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/store", label: "Shop", icon: ShoppingBag },
   { href: "/#faq", label: "FAQs", icon: HelpCircle },
-    { href: "/contact", label: "Contact", icon: Mail },
-  { href: "/store", label: "Search", icon: Search },
+  { href: "/contact", label: "Contact", icon: Mail },
   { href: "/account", label: "Account", icon: User },
   { href: "/cart", label: "Cart", icon: ShoppingCart },
+  { href: "/store", label: "Shop", icon: ShoppingBag },
 ]
 
 export default function MobileDrawer({
@@ -153,20 +151,35 @@ export default function MobileDrawer({
             {/* Main nav links — icons + labels */}
             <nav className="px-4 pt-5 pb-4">
               <div className="grid grid-cols-2 gap-2">
-                {NAV_LINKS.map(({ href, label, icon: Icon }) => (
+                {NAV_LINKS.filter(link => link.label !== "Shop").map(({ href, label, icon: Icon }) => (
                   <LocalizedClientLink
                     key={label}
                     href={href}
                     onClick={close}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-150 font-dm-sans font-semibold text-[15px]
-                      ${label === "Shop"
-                        ? "col-span-2 bg-[#FFCC00] text-[#1A1A1A] hover:bg-[#f0bf00]"
-                        : "text-white/90 hover:bg-white/10 bg-white/[0.06]"
-                      }`}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-150 font-dm-sans font-semibold text-[15px] text-white/90 hover:bg-white/10 bg-white/[0.06]"
                   >
-                    <Icon size={18} strokeWidth={2} className={label === "Shop" ? "text-[#1A1A1A]" : "text-[#FFCC00]"} />
+                    <Icon size={18} strokeWidth={2} className="text-[#FFCC00]" />
                     {label}
-                    {label === "Shop" && <ArrowRight size={16} className="ml-auto" />}
+                  </LocalizedClientLink>
+                ))}
+                <SearchTrigger
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.06] text-white/90 hover:bg-white/10 transition-colors duration-150 font-dm-sans font-semibold text-[15px] w-full text-[#FFCC00]"
+                  label="Search"
+                />
+              </div>
+
+              {/* Shop button below the 2-column grid */}
+              <div className="mt-4">
+                {NAV_LINKS.filter(link => link.label === "Shop").map(({ href, label, icon: Icon }) => (
+                  <LocalizedClientLink
+                    key={label}
+                    href={href}
+                    onClick={close}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-150 font-dm-sans font-semibold text-[15px] bg-[#FFCC00] text-[#1A1A1A] hover:bg-[#f0bf00]"
+                  >
+                    <Icon size={18} strokeWidth={2} className="text-[#1A1A1A]" />
+                    {label}
+                    <ArrowRight size={16} className="ml-auto" />
                   </LocalizedClientLink>
                 ))}
               </div>
