@@ -12,6 +12,7 @@ import PaymentContainer, {
 import Divider from "@modules/common/components/divider"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
+import { placeOrder } from "@lib/data/cart"
 
 const Payment = ({
   cart,
@@ -91,7 +92,13 @@ const Payment = ({
 
           ; (popup.resumeTransaction as Function)(accessCode, {
             onSuccess: async () => {
-              window.location.href = `${pathname}?step=review`
+              try {
+                await placeOrder()
+                // placeOrder() internally redirects to /order/[id]/confirmed
+              } catch (err: any) {
+                setError("Payment succeeded but order placement failed. Contact support.")
+                setIsLoading(false)
+              }
             },
             onError: (error: unknown) => {
               setError("Payment failed. Please try again.")
