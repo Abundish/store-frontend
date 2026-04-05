@@ -1,7 +1,5 @@
-import { Button } from "@medusajs/ui"
 import { useMemo } from "react"
-
-import Thumbnail from "@modules/products/components/thumbnail"
+import Image from "next/image"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
@@ -10,74 +8,137 @@ type OrderCardProps = {
   order: HttpTypes.StoreOrder
 }
 
-const OrderCard = ({ order }: OrderCardProps) => {
-  const numberOfLines = useMemo(() => {
-    return (
-      order.items?.reduce((acc, item) => {
-        return acc + item.quantity
-      }, 0) ?? 0
-    )
-  }, [order])
+const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+  pending: { label: "Pending", color: "#854F0B", bg: "#FAEEDA" },
+  completed: { label: "Completed", color: "#0F6E56", bg: "#E1F5EE" },
+  cancelled: { label: "Cancelled", color: "#A32D2D", bg: "#FCEBEB" },
+  archived: { label: "Archived", color: "#5F5E5A", bg: "#F1EFE8" },
+  requires_action: { label: "Action required", color: "#993C1D", bg: "#FAECE7" },
+}
 
-  const numberOfProducts = useMemo(() => {
-    return order.items?.length ?? 0
-  }, [order])
+const OrderCard = ({ order }: OrderCardProps) => {
+  const numberOfLines = useMemo(
+    () => order.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0,
+    [order]
+  )
+  const numberOfProducts = useMemo(() => order.items?.length ?? 0, [order])
+
+  const status = statusConfig[order.status] ?? {
+    label: order.status,
+    color: "#5F5E5A",
+    bg: "#F1EFE8",
+  }
+
+  const formattedDate = new Date(order.created_at).toLocaleDateString("en-NG", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })
+
+  const visibleItems = order.items?.slice(0, 4) ?? []
+  const overflow = numberOfProducts > 4 ? numberOfProducts - 4 : 0
 
   return (
-    <div className="bg-white flex flex-col" data-testid="order-card">
-      <div className="uppercase text-large-semi mb-1">
-        #<span data-testid="order-display-id">{order.display_id}</span>
-      </div>
-      <div className="flex items-center divide-x divide-gray-200 text-small-regular text-ui-fg-base">
-        <span className="pr-2" data-testid="order-created-at">
-          {new Date(order.created_at).toDateString()}
+    <div
+      className="bg-white border border-[#D8E8D0] rounded-[18px] p-5 flex flex-col gap-4"
+      data-testid="order-card"
+    >
+      {/* Header row */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <p className="font-dm-mono text-[#7A9B7A] text-[11px] uppercase tracking-[0.12em]">
+            Order
+          </p>
+          <p className="font-fraunces text-[#1A3B1A] text-[22px] leading-none" data-testid="order-display-id">
+            #{order.display_id}
+          </p>
+        </div>
+
+        {/* Status pill */}
+        <span
+          className="font-dm-mono text-[11px] font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full"
+          style={{ color: status.color, backgroundColor: status.bg }}
+        >
+          {status.label}
         </span>
-        <span className="px-2" data-testid="order-amount">
+      </div>
+
+      {/* Meta row */}
+      <div className="flex items-center gap-4 flex-wrap">
+        <span
+          className="font-dm-sans text-[13px] text-[#7A9B7A]"
+          data-testid="order-created-at"
+        >
+          {formattedDate}
+        </span>
+        <span className="w-1 h-1 rounded-full bg-[#C8DEC2]" />
+        <span
+          className="font-dm-sans text-[13px] text-[#7A9B7A]"
+          data-testid="order-amount"
+        >
           {convertToLocale({
             amount: order.total,
             currency_code: order.currency_code,
           })}
         </span>
-        <span className="pl-2">{`${numberOfLines} ${
-          numberOfLines > 1 ? "items" : "item"
-        }`}</span>
+        <span className="w-1 h-1 rounded-full bg-[#C8DEC2]" />
+        <span className="font-dm-sans text-[13px] text-[#7A9B7A]">
+          {numberOfLines} {numberOfLines === 1 ? "item" : "items"}
+        </span>
       </div>
-      <div className="grid grid-cols-2 small:grid-cols-4 gap-4 my-4">
-        {order.items?.slice(0, 3).map((i) => {
-          return (
+
+      {/* Item thumbnails */}
+      {visibleItems.length > 0 && (
+        <div className="flex items-center gap-2">
+          {visibleItems.map((item) => (
             <div
-              key={i.id}
-              className="flex flex-col gap-y-2"
+              key={item.id}
+              className="relative w-14 h-14 rounded-[10px] overflow-hidden bg-[#EEF3EC] shrink-0"
               data-testid="order-item"
+              title={item.title}
             >
-              <Thumbnail thumbnail={i.thumbnail} images={[]} size="full" />
-              <div className="flex items-center text-small-regular text-ui-fg-base">
-                <span
-                  className="text-ui-fg-base font-semibold"
-                  data-testid="item-title"
-                >
-                  {i.title}
+              {item.thumbnail ? (
+                <Image
+                  src={item.thumbnail}
+                  alt={item.title ?? "Order item"}
+                  fill
+                  sizes="56px"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 16l4-6 3 4 2-3 4 5H3z" fill="#C8DEC2" />
+                  </svg>
+                </div>
+              )}
+              {/* Quantity badge */}
+              {item.quantity > 1 && (
+                <span className="absolute bottom-0.5 right-0.5 bg-[#006b2f] text-white font-dm-mono text-[9px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                  {item.quantity}
                 </span>
-                <span className="ml-2">x</span>
-                <span data-testid="item-quantity">{i.quantity}</span>
-              </div>
+              )}
             </div>
-          )
-        })}
-        {numberOfProducts > 4 && (
-          <div className="w-full h-full flex flex-col items-center justify-center">
-            <span className="text-small-regular text-ui-fg-base">
-              + {numberOfLines - 4}
-            </span>
-            <span className="text-small-regular text-ui-fg-base">more</span>
-          </div>
-        )}
-      </div>
-      <div className="flex justify-end">
-        <LocalizedClientLink href={`/account/orders/details/${order.id}`}>
-          <Button data-testid="order-details-link" variant="secondary">
-            See details
-          </Button>
+          ))}
+
+          {overflow > 0 && (
+            <div className="w-14 h-14 rounded-[10px] bg-[#EEF3EC] border border-dashed border-[#C8DEC2] flex flex-col items-center justify-center shrink-0">
+              <span className="font-dm-mono text-[#7A9B7A] text-[10px] font-semibold">
+                +{overflow}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex justify-end pt-1 border-t border-[#EEF3EC]">
+        <LocalizedClientLink
+          href={`/account/orders/details/${order.id}`}
+          data-testid="order-details-link"
+          className="font-dm-sans text-[13px] font-semibold text-[#008528] hover:text-[#006b2f] transition-colors flex items-center gap-1"
+        >
+          View details →
         </LocalizedClientLink>
       </div>
     </div>
