@@ -29,11 +29,16 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         return () => { document.body.style.overflow = "" }
     }, [])
 
-    // Focus input on mount
+    // Focus input once portal is mounted
     useEffect(() => {
-        inputRef.current?.focus()
-    }, [])
-
+        if (!mounted) return
+        // rAF ensures the portal has been painted before we focus
+        const id = requestAnimationFrame(() => {
+            inputRef.current?.focus()
+        })
+        return () => cancelAnimationFrame(id)
+    }, [mounted])
+    
     // Close on Escape
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
