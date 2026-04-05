@@ -71,7 +71,6 @@ const OrderCard = ({ order }: OrderCardProps) => {
         {/* Status pills — fulfillment + payment */}
         <div className="flex flex-col items-end gap-1.5">
           <StatusPill status={order.fulfillment_status} />
-          <StatusPill status={order.payment_status} />
         </div>
       </div>
 

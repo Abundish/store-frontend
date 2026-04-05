@@ -2,41 +2,41 @@ export const faqData = [
   {
     question: "Where does Abundish source its produce?",
     answer:
-      "Directly from verified Nigerian partner farms. Every product is traceable to its source farm.",
-  },
-  {
-    question: "How fresh is the produce when it arrives?",
-    answer:
-      "Harvested within 24 hours of your order. We use cold-chain handling and same-day dispatch.",
+      "All produce is sourced directly from verified partner farms in Nigeria. Every item is fully traceable to its origin.",
   },
   {
     question: "Do you deliver to my area?",
     answer:
-      "Currently serving Lagos and Abuja with expansion underway. Enter your address at checkout to confirm coverage.",
+      "We currently deliver within Lagos, with plans to expand to other locations soon.",
   },
   {
-    question: "How are your prices so affordable without middlemen?",
+    question: "How will I receive my order?",
     answer:
-      "By cutting out distribution layers, we pass the savings directly to you and increase farmer income simultaneously.",
+      "Orders are delivered via Bolt parcel delivery to your specified address.",
   },
   {
-    question: "Can I return or get a refund if produce is unsatisfactory?",
+    question: "Why are your prices more affordable?",
     answer:
-      "Yes. See our Returns Policy. We have a freshness guarantee — if it doesn't meet standards, we'll replace it.",
+      "By removing middlemen and unnecessary distribution layers, we pass cost savings directly to you while increasing farmer earnings.",
   },
   {
-    question: "How do I track my order?",
+    question: "Can I request a return or refund?",
     answer:
-      "You'll receive a confirmation email with a live tracking link as soon as your order is dispatched.",
+      "All sales are final. However, refunds may be issued in exceptional cases at our discretion.",
+  },
+  {
+    question: "How can I track my order?",
+    answer:
+      "You can track your order from the “Orders” section of your account. Status updates are provided regularly.",
   },
   {
     question: "How does Abundish support farmers?",
     answer:
-      "Partner farmers receive market data, training resources, and guaranteed purchase agreements, reducing risk and increasing income.",
+      "We provide farmers with market insights, training resources, and guaranteed purchase agreements to reduce risk and improve income.",
   },
   {
-    question: "Is there a minimum order?",
-    answer: "No minimum order. Order as little or as much as you need.",
+    question: "Is there a minimum order requirement?",
+    answer:
+      "No. You can order any quantity based on your needs.",
   },
 ]
-
