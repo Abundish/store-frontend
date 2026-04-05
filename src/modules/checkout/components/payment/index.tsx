@@ -99,10 +99,8 @@ const Payment = ({
         popup.resumeTransaction({
           accessCode,
           onSuccess: () => {
-            router.push(
-              pathname + "?" + createQueryString("step", "review"),
-              { scroll: false }
-            )
+            // Use window.location instead of router.push — avoids postMessage serialization
+            window.location.href = `${pathname}?step=review`
           },
           onCancel: () => {
             setError("Payment was cancelled. Please try again.")
