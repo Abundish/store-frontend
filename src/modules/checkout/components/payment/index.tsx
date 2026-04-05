@@ -84,30 +84,20 @@ const Payment = ({
         const session = resp?.payment_collection?.payment_sessions?.find(
           (s: any) => s.provider_id === selectedPaymentMethod
         )
-
         const accessCode = session?.data?.paystackTxAccessCode as string
-
-        if (!accessCode) {
-          setError("Could not initialize Paystack payment. Please try again.")
-          setIsLoading(false)
-          return
-        }
 
         const PaystackPop = (await import("@paystack/inline-js")).default
         const popup = new PaystackPop()
 
-        popup.resumeTransaction({
-          accessCode,
-          onSuccess: () => {
-            // Use window.location instead of router.push — avoids postMessage serialization
-            window.location.href = `${pathname}?step=review`
-          },
-          onCancel: () => {
-            setError("Payment was cancelled. Please try again.")
-            setIsLoading(false)
-          },
-        })
-
+          ; (popup.resumeTransaction as Function)(accessCode, {
+            onSuccess: async () => {
+              window.location.href = `${pathname}?step=review`
+            },
+            onError: (error: unknown) => {
+              setError("Payment failed. Please try again.")
+              setIsLoading(false)
+            },
+          })
         // Don't set isLoading false here — popup is async, user is still in flow
         return
       }
