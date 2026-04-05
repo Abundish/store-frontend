@@ -9,11 +9,31 @@ type OrderCardProps = {
 }
 
 const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
-  pending: { label: "Pending", color: "#854F0B", bg: "#FAEEDA" },
-  completed: { label: "Completed", color: "#0F6E56", bg: "#E1F5EE" },
-  cancelled: { label: "Cancelled", color: "#A32D2D", bg: "#FCEBEB" },
-  archived: { label: "Archived", color: "#5F5E5A", bg: "#F1EFE8" },
-  requires_action: { label: "Action required", color: "#993C1D", bg: "#FAECE7" },
+  // fulfillment statuses
+  not_fulfilled:        { label: "Not fulfilled",  color: "#854F0B", bg: "#FAEEDA" },
+  partially_fulfilled:  { label: "Partial",         color: "#854F0B", bg: "#FAEEDA" },
+  fulfilled:            { label: "Fulfilled",        color: "#0F6E56", bg: "#E1F5EE" },
+  partially_shipped:    { label: "Partial ship",     color: "#185FA5", bg: "#E6F1FB" },
+  shipped:              { label: "Shipped",          color: "#185FA5", bg: "#E6F1FB" },
+  returned:             { label: "Returned",         color: "#5F5E5A", bg: "#F1EFE8" },
+  cancelled:            { label: "Cancelled",        color: "#A32D2D", bg: "#FCEBEB" },
+  requires_action:      { label: "Action required",  color: "#993C1D", bg: "#FAECE7" },
+  // payment statuses
+  awaiting:             { label: "Awaiting payment", color: "#854F0B", bg: "#FAEEDA" },
+  captured:             { label: "Paid",             color: "#0F6E56", bg: "#E1F5EE" },
+  refunded:             { label: "Refunded",         color: "#5F5E5A", bg: "#F1EFE8" },
+}
+
+const StatusPill = ({ status }: { status: string }) => {
+  const cfg = statusConfig[status] ?? { label: status, color: "#5F5E5A", bg: "#F1EFE8" }
+  return (
+    <span
+      className="font-dm-mono text-[11px] font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full"
+      style={{ color: cfg.color, backgroundColor: cfg.bg }}
+    >
+      {cfg.label}
+    </span>
+  )
 }
 
 const OrderCard = ({ order }: OrderCardProps) => {
@@ -22,12 +42,6 @@ const OrderCard = ({ order }: OrderCardProps) => {
     [order]
   )
   const numberOfProducts = useMemo(() => order.items?.length ?? 0, [order])
-
-  const status = statusConfig[order.status] ?? {
-    label: order.status,
-    color: "#5F5E5A",
-    bg: "#F1EFE8",
-  }
 
   const formattedDate = new Date(order.created_at).toLocaleDateString("en-NG", {
     day: "numeric",
@@ -54,28 +68,20 @@ const OrderCard = ({ order }: OrderCardProps) => {
           </p>
         </div>
 
-        {/* Status pill */}
-        <span
-          className="font-dm-mono text-[11px] font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full"
-          style={{ color: status.color, backgroundColor: status.bg }}
-        >
-          {status.label}
-        </span>
+        {/* Status pills — fulfillment + payment */}
+        <div className="flex flex-col items-end gap-1.5">
+          <StatusPill status={order.fulfillment_status} />
+          <StatusPill status={order.payment_status} />
+        </div>
       </div>
 
       {/* Meta row */}
       <div className="flex items-center gap-4 flex-wrap">
-        <span
-          className="font-dm-sans text-[13px] text-[#7A9B7A]"
-          data-testid="order-created-at"
-        >
+        <span className="font-dm-sans text-[13px] text-[#7A9B7A]" data-testid="order-created-at">
           {formattedDate}
         </span>
         <span className="w-1 h-1 rounded-full bg-[#C8DEC2]" />
-        <span
-          className="font-dm-sans text-[13px] text-[#7A9B7A]"
-          data-testid="order-amount"
-        >
+        <span className="font-dm-sans text-[13px] text-[#7A9B7A]" data-testid="order-amount">
           {convertToLocale({
             amount: order.total,
             currency_code: order.currency_code,
@@ -112,7 +118,6 @@ const OrderCard = ({ order }: OrderCardProps) => {
                   </svg>
                 </div>
               )}
-              {/* Quantity badge */}
               {item.quantity > 1 && (
                 <span className="absolute bottom-0.5 right-0.5 bg-[#006b2f] text-white font-dm-mono text-[9px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                   {item.quantity}
