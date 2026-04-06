@@ -39,7 +39,7 @@ export default function SearchTrigger({
         {label && <span>{label}</span>}
       </button>
 
-      {open && <SearchModal onClose={() => setOpen(false)} inputRef={inputRef} />}
+      {open && <SearchModal onClose={() => setOpen(false)} inputRef={inputRef as React.RefObject<HTMLInputElement>} />}
     </>
   )
 }
