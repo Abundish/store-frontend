@@ -7,17 +7,21 @@ import { createPortal } from "react-dom"
 import Image from "next/image"
 import { Search, X, Loader2 } from "lucide-react"
 
-export default function SearchModal({ onClose }: { onClose: () => void }) {
+export default function SearchModal({
+    onClose,
+    inputRef,
+}: {
+    onClose: () => void
+    inputRef: React.RefObject<HTMLInputElement>  // ← received from parent
+}) {
     const [query, setQuery] = useState("")
     const [results, setResults] = useState<SearchProduct[]>([])
     const [isEmpty, setIsEmpty] = useState(false)
     const [isPending, startTransition] = useTransition()
     const [mounted, setMounted] = useState(false)
-    const inputRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
     const { countryCode } = useParams() as { countryCode: string }
 
-    // Wait for client mount before portaling (avoid SSR mismatch)
     useEffect(() => {
         setMounted(true)
         return () => setMounted(false)
@@ -29,15 +33,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         return () => { document.body.style.overflow = "" }
     }, [])
 
-    // Focus input once portal is mounted
-    useEffect(() => {
-        if (!mounted) return
-        // rAF ensures the portal has been painted before we focus
-        const id = requestAnimationFrame(() => {
-            inputRef.current?.focus()
-        })
-        return () => cancelAnimationFrame(id)
-    }, [mounted])
+    // ← removed the focus useEffect entirely; parent handles it
 
     // Close on Escape
     useEffect(() => {
@@ -74,24 +70,20 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
 
     return createPortal(
         <>
-            {/* Backdrop */}
             <div
                 className="fixed inset-0 z-[9998] bg-[#1A3B1A]/40 backdrop-blur-sm"
                 onClick={onClose}
             />
-
-            {/* Modal */}
             <div
                 className="fixed top-[72px] left-1/2 -translate-x-1/2 z-[9999] w-full max-w-[600px] px-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="bg-white rounded-[20px] shadow-2xl overflow-hidden">
-                    {/* Input row */}
                     <div className="flex items-center gap-3 px-5 py-4 border-b border-[#EEF3EC]">
                         <Search size={18} className="text-[#7A9B7A] shrink-0" />
                         <input
-                            ref={inputRef}
-                            autoFocus
+                            ref={inputRef}           // ← use the ref passed from parent
+                            // autoFocus removed — we focus programmatically instead
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
@@ -110,7 +102,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                         ) : null}
                     </div>
 
-                    {/* Results */}
                     {results.length > 0 && (
                         <ul className="py-2 max-h-[420px] overflow-y-auto">
                             {results.map((product) => (
@@ -152,7 +143,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                         </ul>
                     )}
 
-                    {/* Empty state */}
                     {isEmpty && (
                         <div className="flex flex-col items-center gap-2 py-10">
                             <p className="font-fraunces text-[#1A3B1A] text-[18px]">No results</p>
@@ -162,7 +152,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                         </div>
                     )}
 
-                    {/* Idle state */}
                     {!query && (
                         <div className="px-5 py-4">
                             <p className="font-dm-mono text-[#B5CEB5] text-[12px] uppercase tracking-wide">
