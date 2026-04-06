@@ -38,7 +38,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         })
         return () => cancelAnimationFrame(id)
     }, [mounted])
-    
+
     // Close on Escape
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -91,11 +91,12 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                         <Search size={18} className="text-[#7A9B7A] shrink-0" />
                         <input
                             ref={inputRef}
+                            autoFocus
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search for fruits, vegetables…"
-                            className="flex-1 font-dm-sans text-[15px] text-[#1A3B1A] placeholder:text-[#B5CEB5] bg-transparent outline-none"
+                            className="flex-1 font-dm-sans text-[1px] text-[#1A3B1A] placeholder:text-[#B5CEB5] bg-transparent outline-none"
                         />
                         {isPending ? (
                             <Loader2 size={16} className="text-[#7A9B7A] animate-spin shrink-0" />
