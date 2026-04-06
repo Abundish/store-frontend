@@ -34,8 +34,8 @@ export default async function Home(props: {
       <TrustBar />
       <HowItWorks />
       <FeaturedProducts region={region} />
-      <BrandStory />
       <CategoriesShowcase />
+      <BrandStory />
       <Testimonials />
       <FAQ />
       <Newsletter />
