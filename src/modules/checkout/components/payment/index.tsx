@@ -94,8 +94,10 @@ const Payment = ({
             onSuccess: async () => {
               try {
                 await placeOrder()
-                // placeOrder() internally redirects to /order/[id]/confirmed
               } catch (err: any) {
+                if (err?.digest?.startsWith("NEXT_REDIRECT")) {
+                  throw err // let Next.js handle the redirect
+                }
                 setError("Payment succeeded but order placement failed. Contact support.")
                 setIsLoading(false)
               }
