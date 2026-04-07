@@ -2,6 +2,7 @@ import { getBaseURL } from "@lib/util/env"
 import { Metadata } from "next"
 import "styles/globals.css"
 import { DM_Mono, DM_Sans, Fraunces } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     >
       <body>
         <main className="relative">{props.children}</main>
+        <Analytics />
       </body>
     </html>
   )
