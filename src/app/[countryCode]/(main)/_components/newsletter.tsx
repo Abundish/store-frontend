@@ -48,7 +48,7 @@ export default function Newsletter() {
             </h2>
 
             <p className="font-dm-sans text-[#1A4A2A] text-[15px] leading-[1.75]">
-              Weekly harvest updates, seasonal recipes,<br className="hidden sm:block" /> and exclusive deals — straight to your inbox.
+              Weekly harvest updates, seasonal recipes,<br className="hidden sm:block" /> and exclusive deals.
             </p>
           </div>
 
