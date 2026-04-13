@@ -18,7 +18,7 @@ export default async function InSeason({
   } = await listProducts({
     regionId: region.id,
     queryParams: {
-      limit: 8,
+      limit: 6,
       collection_id: [collection.id],
       fields:
         "title,handle,*variants.calculated_price,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder,*variants.images,+metadata,+tags,*images,thumbnail,*variants.options",
