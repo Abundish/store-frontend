@@ -1,25 +1,31 @@
+import { getCollectionByHandle } from "@lib/data/collections"
 import { listProducts } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
-
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-
 import ProductPreview from "@modules/products/components/product-preview"
 
-export default async function FeaturedProducts({
+export default async function InSeason({
   region,
 }: {
   region: HttpTypes.StoreRegion
 }) {
+  const collection = await getCollectionByHandle("in-season")
+
+  if (!collection) return null
+
   const {
     response: { products },
   } = await listProducts({
     regionId: region.id,
     queryParams: {
       limit: 8,
+      collection_id: [collection.id],
       fields:
         "title,handle,*variants.calculated_price,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder,*variants.images,+metadata,+tags,*images,thumbnail,*variants.options",
     } as any,
   })
+
+  if (!products?.length) return null
 
   return (
     <section className="w-full bg-[#F9F6EE] py-16 lg:py-28">
@@ -36,7 +42,7 @@ export default async function FeaturedProducts({
 
           <div className="hidden md:block">
             <LocalizedClientLink
-              href="/store"
+              href="/collections/in-season"
               className="font-dm-sans text-[#008528] font-semibold hover:underline"
             >
               See everything →
@@ -45,16 +51,14 @@ export default async function FeaturedProducts({
         </div>
 
         <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {products?.map((product) => {
-            return (
-              <ProductPreview key={product.id} product={product} region={region} />
-            )
-          })}
+          {products.map((product) => (
+            <ProductPreview key={product.id} product={product} region={region} />
+          ))}
         </div>
 
         <div className="mt-8 md:hidden text-right">
           <LocalizedClientLink
-            href="/store"
+            href="/collections/in-season"
             className="font-dm-sans text-[#008528] font-semibold hover:underline"
           >
             See everything →
@@ -64,4 +68,3 @@ export default async function FeaturedProducts({
     </section>
   )
 }
-

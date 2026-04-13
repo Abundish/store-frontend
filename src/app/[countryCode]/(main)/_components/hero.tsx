@@ -28,23 +28,13 @@ export default function Hero() {
                 href="/store"
                 className="group h-[52px] px-8 rounded-[6px] bg-[#006b2f] text-white font-dm-sans font-semibold text-[15px] tracking-[-0.01em] inline-flex items-center justify-center gap-3 w-full sm:w-auto shadow-[0_2px_12px_rgba(0,107,47,0.25)] hover:bg-[#008528] transition-colors duration-200"
               >
-                Shop Fresh Produce
+                Shop Now
                 <ArrowRight
                   size={16}
                   className="transition-transform duration-200 group-hover:translate-x-1"
                 />
               </LocalizedClientLink>
 
-              <a
-                href="#how-it-works"
-                className="group inline-flex items-center justify-center sm:justify-start gap-2 font-dm-sans font-medium text-[15px] text-[#006b2f] hover:text-[#008528] transition-colors w-full sm:w-auto"
-              >
-                <Play size={14} fill="currentColor" className="opacity-70" />
-                <span className="relative inline-block pb-[3px]">
-                  <span>How It Works</span>
-                  <span className="absolute left-0 bottom-0 h-[2px] w-full origin-left scale-x-100 bg-[#FFCC00] transition-transform duration-200 group-hover:scale-x-95" />
-                </span>
-              </a>
             </div>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start text-center sm:text-left gap-x-4 gap-y-2 mt-10 font-dm-mono text-[12px] text-[#008528] uppercase tracking-wide">              <span className="hidden sm:inline">🌿 100% Farm Direct</span>
