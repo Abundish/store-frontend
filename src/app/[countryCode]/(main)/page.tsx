@@ -33,9 +33,9 @@ export default async function Home(props: {
       <Hero />
       <TrustBar />
       <InSeason region={region} />
+      <CategoriesShowcase />
       <TopPicks region={region} />
       <HowItWorks />
-      <CategoriesShowcase />
       <BrandStory />
       <Testimonials />
       <FAQ />

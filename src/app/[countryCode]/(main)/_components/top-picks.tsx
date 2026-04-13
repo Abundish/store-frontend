@@ -30,15 +30,15 @@ export default async function TopPicks({
   if (!products?.length) return null
 
   return (
-    <section className="w-full bg-[#006b2f] py-16 lg:py-28 overflow-hidden">
+    <section className="w-full bg-[#F9F6EE] py-16 lg:py-28">
       <div className="max-w-[1100px] mx-auto px-6">
         {/* Header */}
-        <div className="flex items-end justify-between gap-6 mb-10">
+        <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="font-dm-mono text-[#FFCC00] uppercase tracking-[0.14em] text-xs">
+            <p className="font-dm-mono text-[#008528] uppercase tracking-[0.14em] text-xs">
               Customer Favourites
             </p>
-            <h2 className="font-fraunces text-white text-[36px] lg:text-[48px] mt-4 leading-tight">
+            <h2 className="font-fraunces text-[#006b2f] text-[36px] lg:text-[48px] mt-4">
               Top selling this week
             </h2>
           </div>
@@ -46,20 +46,20 @@ export default async function TopPicks({
           <div className="hidden md:block">
             <LocalizedClientLink
               href="/collections/top-picks"
-              className="font-dm-sans text-[#FFCC00] font-semibold hover:underline whitespace-nowrap"
+              className="font-dm-sans text-[#008528] font-semibold hover:underline whitespace-nowrap"
             >
-              Shop all →
+              See all →
             </LocalizedClientLink>
           </div>
         </div>
 
         {/* Product grid with rank badges */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product, index) => (
             <div key={product.id} className="relative group">
               {/* Rank badge */}
-              <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-[#FFCC00] px-2 py-1 rounded-sm">
-                <span className="font-dm-mono text-[#006b2f] text-[10px] font-bold leading-none">
+              <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-[#006b2f] px-2 py-1 rounded-sm">
+                <span className="font-dm-mono text-white text-[10px] font-bold leading-none">
                   #{RANK_LABELS[index]}
                 </span>
               </div>
@@ -73,19 +73,10 @@ export default async function TopPicks({
         <div className="mt-8 md:hidden text-right">
           <LocalizedClientLink
             href="/collections/top-picks"
-            className="font-dm-sans text-[#FFCC00] font-semibold hover:underline"
+            className="font-dm-sans text-[#008528] font-semibold hover:underline"
           >
             Shop all →
           </LocalizedClientLink>
-        </div>
-
-        {/* Decorative divider */}
-        <div className="mt-12 flex items-center gap-4 opacity-20">
-          <div className="flex-1 h-px bg-white" />
-          <span className="font-dm-mono text-white text-xs tracking-widest uppercase">
-            Abundish
-          </span>
-          <div className="flex-1 h-px bg-white" />
         </div>
       </div>
     </section>

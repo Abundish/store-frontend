@@ -7,7 +7,7 @@ export default async function CategoriesShowcase() {
     productCategories?.filter((c) => !c.parent_category) ?? []
 
   return (
-    <section className="w-full bg-white py-16 lg:py-24 overflow-hidden">
+    <section className="w-full bg-[#F9F6EE] py-16 lg:py-24 overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-6">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 mb-6">

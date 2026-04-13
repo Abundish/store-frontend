@@ -61,7 +61,7 @@ export default async function InSeason({
             href="/collections/in-season"
             className="font-dm-sans text-[#008528] font-semibold hover:underline"
           >
-            See everything →
+            See all →
           </LocalizedClientLink>
         </div>
       </div>
