@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 
 import { listCartOptions, retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
@@ -7,6 +8,7 @@ import { StoreCartShippingOption } from "@medusajs/types"
 import CartMismatchBanner from "@modules/layout/components/cart-mismatch-banner"
 import Footer from "@modules/layout/templates/footer"
 import Nav from "@modules/layout/templates/nav"
+import PromoCapture from "@modules/layout/components/promo-capture"
 import FreeShippingPriceNudge from "@modules/shipping/components/free-shipping-price-nudge"
 
 export const metadata: Metadata = {
@@ -29,6 +31,9 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <PromoCapture cart={cart} />
+      </Suspense>
       <Nav cartCount={cartCount}/>
       {customer && cart && (
         <CartMismatchBanner customer={customer} cart={cart} />

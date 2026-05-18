@@ -1,5 +1,6 @@
 "use client"
 
+import AppliedPromotions from "@modules/cart/components/applied-promotions"
 import CartTotals from "@modules/common/components/cart-totals"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -32,6 +33,12 @@ const Summary = ({ cart }: SummaryProps) => {
 
       {/* Discount code */}
       <DiscountCode cart={cart} />
+
+      {/* Applied promotions */}
+      <AppliedPromotions
+        promotions={cart.promotions}
+        currencyCode={cart.currency_code}
+      />
 
       {/* Divider */}
       <div className="w-full h-px bg-[#D8E8D0]" />
