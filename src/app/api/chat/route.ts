@@ -16,8 +16,8 @@ interface GeminiRequest {
 }
 
 const RATE_LIMIT = {
-  MAX_REQUESTS: 10,     // max requests per window per IP
-  WINDOW_MS: 60_000,    // 1 minute window
+  MAX_REQUESTS: 10,
+  WINDOW_MS: 60_000,
 };
 
 const ipMap = new Map<string, { count: number; windowStart: number }>();
@@ -44,12 +44,6 @@ setInterval(() => {
   });
 }, 5 * 60_000);
 
-// ---------------------------------------------------------------------------
-// System prompt
-// Update this whenever store details change — delivery zones, payment
-// methods, policies, etc. The model will ONLY answer what's grounded here.
-// ---------------------------------------------------------------------------
-
 const ABUNDISH_SYSTEM_PROMPT = `
 You are the Abundish virtual assistant — a friendly, concise helper for customers shopping on Abundish.info, Nigeria's premium farm-to-table produce e-commerce platform.
 
@@ -73,7 +67,6 @@ Abundish is a Nigerian farm-to-table produce platform that connects customers di
 ## Ordering
 - Browse products on the Abundish website and add to cart.
 - Create an account or check out as a guest.
-- Minimum order value: ₦5,000.
 - Orders can be tracked from your account dashboard under "My Orders".
 
 ## Payment
@@ -84,9 +77,7 @@ Abundish is a Nigerian farm-to-table produce platform that connects customers di
 ## Delivery
 - We currently deliver within Lagos State.
 - Delivery fees are calculated based on your distance from our fulfillment center — you'll see the exact fee at checkout before you pay.
-- Estimated delivery time: 1–3 business days after order confirmation.
-- Orders placed before 12 PM are typically processed same day.
-- We do not currently offer same-day delivery.
+- Estimated delivery time: Same-day delivery if order is placed before 5pm otherwise, order is delivered the next day
 
 ## Returns & Refunds
 - If you receive damaged, spoiled, or incorrect items, contact us within 24 hours of delivery.
@@ -180,12 +171,8 @@ function isValidHistory(history: unknown): history is { role: "user" | "model"; 
   );
 }
 
-// ---------------------------------------------------------------------------
-// Route handler
-// ---------------------------------------------------------------------------
-
 export async function POST(req: NextRequest) {
-  // Get IP for rate limiting (works with Vercel, VPS behind nginx, etc.)
+  // Get IP for rate limiting
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     req.headers.get("x-real-ip") ??
@@ -205,7 +192,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  // Body shape: { history: [{ role, content }] }
   const { history } = body as { history: unknown };
 
   if (!isValidHistory(history)) {
@@ -216,18 +202,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No messages provided." }, { status: 400 });
   }
 
-  // Last message must be from user
   const last = history[history.length - 1];
   if (last.role !== "user") {
     return NextResponse.json({ error: "Last message must be from user." }, { status: 400 });
   }
 
-  // Convert to Gemini format and sanitize
   const geminiHistory: ChatMessage[] = history.map((m) => ({
     role: m.role,
     parts: [{ text: sanitize(m.content) }],
   }));
-
   try {
     const reply = await callGemini(geminiHistory);
     return NextResponse.json({ reply }, { status: 200 });
