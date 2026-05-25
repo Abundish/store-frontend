@@ -37,7 +37,6 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-// Cleanup stale entries every 5 minutes to avoid memory leak
 setInterval(() => {
   const cutoff = Date.now() - RATE_LIMIT.WINDOW_MS;
   ipMap.forEach((entry, ip) => {
@@ -108,7 +107,7 @@ For questions about: specific product availability, real-time stock, custom orde
 // Gemini API call
 // ---------------------------------------------------------------------------
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-3.5-flash";
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 async function callGemini(history: ChatMessage[]): Promise<string> {
