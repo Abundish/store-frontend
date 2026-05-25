@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
-
+import ChatWidget from "./_components/ChatWidget"
 import { listCartOptions, retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
 import { getBaseURL } from "@lib/util/env"
@@ -47,6 +47,7 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
         />
       )}
       {props.children}
+      <ChatWidget />
       <Footer />
     </>
   )
