@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Leaf,
   Mail,
+  BookOpen,
 } from "lucide-react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
@@ -29,10 +30,11 @@ type CategoryNavItem = {
 
 const NAV_LINKS = [
   { href: "/", label: "Home", icon: Home },
+  { href: "/store", label: "Shop", icon: ShoppingBag },
+  { href: "/blog", label: "Blog", icon: BookOpen },
   { href: "/#faq", label: "FAQs", icon: HelpCircle },
   { href: "/contact", label: "Contact", icon: Mail },
   { href: "/account", label: "Account", icon: User },
-  { href: "/store", label: "Shop", icon: ShoppingBag },
 ]
 
 export default function MobileDrawer({

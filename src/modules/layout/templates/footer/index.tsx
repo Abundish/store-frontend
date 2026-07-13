@@ -111,6 +111,14 @@ export default async function Footer() {
               </li>
               <li>
                 <LocalizedClientLink
+                  href="/blog"
+                  className="font-dm-sans text-[14px] text-white/70 hover:text-white transition"
+                >
+                  Blog
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
                   href="/#faq"
                   className="font-dm-sans text-[14px] text-white/70 hover:text-white transition"
                 >

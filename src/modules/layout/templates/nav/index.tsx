@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { ShoppingCart, User, Home, ShoppingBag, HelpCircle, Mail } from "lucide-react"
+import { ShoppingCart, User, Home, ShoppingBag, HelpCircle, Mail, BookOpen } from "lucide-react"
 
 import { listCategories } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -88,6 +88,14 @@ export default async function Nav({ cartCount = 0 }: { cartCount?: number }) {
             >
               <ShoppingBag size={15} strokeWidth={2} />
               Shop Now
+            </LocalizedClientLink>
+
+            <LocalizedClientLink
+              href="/blog"
+              className="relative inline-flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-[#1A1A1A] transition-colors duration-200 after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#008528] after:transition-transform after:duration-200 hover:after:scale-x-100 group-data-[scrolled=true]:text-white group-data-[scrolled=true]:after:bg-white"
+            >
+              <BookOpen size={15} strokeWidth={2} />
+              Blog
             </LocalizedClientLink>
 
             <LocalizedClientLink
