@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import type { ComponentPropsWithoutRef } from "react"
+import remarkGfm from "remark-gfm"
 
 type MdxContentProps = {
   source: string
@@ -75,12 +76,44 @@ const mdxComponents = {
   img: (props: ComponentPropsWithoutRef<"img">) => (
     <MdxImage src={props.src} alt={props.alt} />
   ),
+  table: (props: ComponentPropsWithoutRef<"table">) => (
+    <div className="my-8 overflow-x-auto rounded-[12px] border border-[#D8E8D0]">
+      <table className="w-full min-w-[480px] border-collapse text-left" {...props} />
+    </div>
+  ),
+  thead: (props: ComponentPropsWithoutRef<"thead">) => (
+    <thead className="bg-[#F3F6F1]" {...props} />
+  ),
+  tbody: (props: ComponentPropsWithoutRef<"tbody">) => (
+    <tbody className="divide-y divide-[#D8E8D0] bg-white" {...props} />
+  ),
+  tr: (props: ComponentPropsWithoutRef<"tr">) => <tr {...props} />,
+  th: (props: ComponentPropsWithoutRef<"th">) => (
+    <th
+      className="px-4 py-3 font-dm-mono text-[11px] uppercase tracking-[0.12em] text-[#006b2f] align-top"
+      {...props}
+    />
+  ),
+  td: (props: ComponentPropsWithoutRef<"td">) => (
+    <td
+      className="px-4 py-3 font-dm-sans text-[15px] leading-[1.6] text-[#3D5A3D] align-top"
+      {...props}
+    />
+  ),
 }
 
 export default function MdxContent({ source }: MdxContentProps) {
   return (
     <div className="blog-content">
-      <MDXRemote source={source} components={mdxComponents} />
+      <MDXRemote
+        source={source}
+        components={mdxComponents}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        }}
+      />
     </div>
   )
 }
