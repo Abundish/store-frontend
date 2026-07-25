@@ -53,7 +53,7 @@ export default function SearchModal({
         }
         const timer = setTimeout(() => {
             startTransition(async () => {
-                const hits = await searchProducts(query)
+                const hits = await searchProducts(query, countryCode)
                 setResults(hits)
                 setIsEmpty(hits.length === 0)
             })

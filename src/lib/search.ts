@@ -1,3 +1,6 @@
+"use server"
+
+import { listProducts } from "@lib/data/products"
 import { Meilisearch } from "meilisearch"
 
 const client = new Meilisearch({
@@ -15,13 +18,29 @@ export type SearchProduct = {
   tags: string[]
 }
 
-export async function searchProducts(query: string): Promise<SearchProduct[]> {
+export async function searchProducts(
+  query: string,
+  countryCode: string
+): Promise<SearchProduct[]> {
   if (!query.trim()) return []
 
-  
   const result = await client
     .index("products")
     .search<SearchProduct>(query, { limit: 8 })
 
-  return result.hits
+  if (!result.hits.length) return []
+
+  const {
+    response: { products },
+  } = await listProducts({
+    countryCode,
+    queryParams: {
+      id: result.hits.map((hit) => hit.id),
+      limit: result.hits.length,
+    },
+  })
+
+  const inStockIds = new Set(products.map((product) => product.id))
+
+  return result.hits.filter((hit) => inStockIds.has(hit.id))
 }
