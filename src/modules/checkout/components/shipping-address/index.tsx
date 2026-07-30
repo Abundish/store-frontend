@@ -1,11 +1,17 @@
+import {
+  isLagosProvince,
+  LAGOS_DELIVERY_ERROR,
+} from "@lib/util/google-places"
 import { HttpTypes } from "@medusajs/types"
 import { Container } from "@medusajs/ui"
+import AddressAutocomplete from "@modules/common/components/address-autocomplete"
 import Checkbox from "@modules/common/components/checkbox"
 import Input from "@modules/common/components/input"
 import { mapKeys } from "lodash"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import AddressSelect from "../address-select"
 import CountrySelect from "../country-select"
+import ErrorMessage from "../error-message"
 
 const ShippingAddress = ({
   customer,
@@ -18,6 +24,8 @@ const ShippingAddress = ({
   checked: boolean
   onChange: () => void
 }) => {
+  const [lagosError, setLagosError] = useState<string | null>(null)
+
   const [formData, setFormData] = useState<Record<string, any>>({
     "shipping_address.first_name": cart?.shipping_address?.first_name || "",
     "shipping_address.last_name": cart?.shipping_address?.last_name || "",
@@ -86,11 +94,42 @@ const ShippingAddress = ({
       HTMLInputElement | HTMLInputElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target
+
+    if (name === "shipping_address.province") {
+      setLagosError(
+        value && !isLagosProvince(value) ? LAGOS_DELIVERY_ERROR : null
+      )
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
   }
+
+  const handlePlaceSelected = useCallback(
+    (address: {
+      address_1: string
+      city: string
+      province: string
+      postal_code: string
+      country_code: string
+    }) => {
+      setFormData((prevState) => ({
+        ...prevState,
+        "shipping_address.address_1": address.address_1,
+        "shipping_address.city": address.city || prevState["shipping_address.city"],
+        "shipping_address.province": address.province,
+        "shipping_address.postal_code":
+          address.postal_code || prevState["shipping_address.postal_code"],
+        "shipping_address.country_code":
+          address.country_code || prevState["shipping_address.country_code"],
+      }))
+      setLagosError(null)
+    },
+    []
+  )
 
   return (
     <>
@@ -129,12 +168,14 @@ const ShippingAddress = ({
           required
           data-testid="shipping-last-name-input"
         />
-        <Input
+        <AddressAutocomplete
           label="Address"
           name="shipping_address.address_1"
           autoComplete="address-line1"
           value={formData["shipping_address.address_1"]}
           onChange={handleChange}
+          onPlaceSelected={handlePlaceSelected}
+          onLagosError={setLagosError}
           required
           data-testid="shipping-address-input"
         />
@@ -174,14 +215,16 @@ const ShippingAddress = ({
           data-testid="shipping-country-select"
         />
         <Input
-          label="State / Province"
+          label="State"
           name="shipping_address.province"
           autoComplete="address-level1"
           value={formData["shipping_address.province"]}
           onChange={handleChange}
+          required
           data-testid="shipping-province-input"
         />
       </div>
+      <ErrorMessage error={lagosError} data-testid="lagos-validation-error" />
       <div className="my-8">
         <Checkbox
           label="Billing address same as shipping address"

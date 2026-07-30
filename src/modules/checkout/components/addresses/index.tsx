@@ -1,6 +1,10 @@
 "use client"
 
 import { setAddresses } from "@lib/data/cart"
+import {
+  isLagosProvince,
+  LAGOS_DELIVERY_ERROR,
+} from "@lib/util/google-places"
 import compareAddresses from "@lib/util/compare-addresses"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
@@ -8,7 +12,7 @@ import { Heading, Text, useToggleState } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
 import Spinner from "@modules/common/icons/spinner"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import BillingAddress from "../billing_address"
 import ErrorMessage from "../error-message"
 import ShippingAddress from "../shipping-address"
@@ -38,6 +42,34 @@ const Addresses = ({
   }
 
   const [message, formAction] = useActionState(setAddresses, null)
+  const [clientError, setClientError] = useState<string | null>(null)
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const form = event.currentTarget
+    const shippingProvince = (
+      form.elements.namedItem("shipping_address.province") as HTMLInputElement
+    )?.value
+
+    if (!isLagosProvince(shippingProvince)) {
+      event.preventDefault()
+      setClientError(LAGOS_DELIVERY_ERROR)
+      return
+    }
+
+    if (!sameAsBilling) {
+      const billingProvince = (
+        form.elements.namedItem("billing_address.province") as HTMLInputElement
+      )?.value
+
+      if (!isLagosProvince(billingProvince)) {
+        event.preventDefault()
+        setClientError(LAGOS_DELIVERY_ERROR)
+        return
+      }
+    }
+
+    setClientError(null)
+  }
 
   return (
     <div className="bg-white">
@@ -62,7 +94,7 @@ const Addresses = ({
         )}
       </div>
       {isOpen ? (
-        <form action={formAction}>
+        <form action={formAction} onSubmit={handleSubmit}>
           <div className="pb-8">
             <ShippingAddress
               customer={customer}
@@ -86,7 +118,10 @@ const Addresses = ({
             <SubmitButton className="mt-6" data-testid="submit-address-button">
               Continue to delivery
             </SubmitButton>
-            <ErrorMessage error={message} data-testid="address-error-message" />
+            <ErrorMessage
+              error={clientError || message}
+              data-testid="address-error-message"
+            />
           </div>
         </form>
       ) : (

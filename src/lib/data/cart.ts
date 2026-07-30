@@ -2,6 +2,10 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
+import {
+  isLagosProvince,
+  LAGOS_DELIVERY_ERROR,
+} from "@lib/util/google-places"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
@@ -344,6 +348,11 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
       throw new Error("No existing cart found when setting addresses")
     }
 
+    const shippingProvince = formData.get("shipping_address.province")
+    if (!isLagosProvince(String(shippingProvince ?? ""))) {
+      throw new Error(LAGOS_DELIVERY_ERROR)
+    }
+
     const data = {
       shipping_address: {
         first_name: formData.get("shipping_address.first_name"),
@@ -376,6 +385,14 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
         province: formData.get("billing_address.province"),
         phone: formData.get("billing_address.phone"),
       }
+
+    if (
+      sameAsBilling !== "on" &&
+      !isLagosProvince(String(data.billing_address?.province ?? ""))
+    ) {
+      throw new Error(LAGOS_DELIVERY_ERROR)
+    }
+
     await updateCart(data)
   } catch (e: any) {
     return e.message

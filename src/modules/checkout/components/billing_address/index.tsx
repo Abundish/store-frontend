@@ -1,9 +1,17 @@
+import {
+  isLagosProvince,
+  LAGOS_DELIVERY_ERROR,
+} from "@lib/util/google-places"
 import { HttpTypes } from "@medusajs/types"
+import AddressAutocomplete from "@modules/common/components/address-autocomplete"
 import Input from "@modules/common/components/input"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import CountrySelect from "../country-select"
+import ErrorMessage from "../error-message"
 
 const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
+  const [lagosError, setLagosError] = useState<string | null>(null)
+
   const [formData, setFormData] = useState<any>({
     "billing_address.first_name": cart?.billing_address?.first_name || "",
     "billing_address.last_name": cart?.billing_address?.last_name || "",
@@ -21,11 +29,42 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
       HTMLInputElement | HTMLInputElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target
+
+    if (name === "billing_address.province") {
+      setLagosError(
+        value && !isLagosProvince(value) ? LAGOS_DELIVERY_ERROR : null
+      )
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
   }
+
+  const handlePlaceSelected = useCallback(
+    (address: {
+      address_1: string
+      city: string
+      province: string
+      postal_code: string
+      country_code: string
+    }) => {
+      setFormData((prevState: Record<string, string>) => ({
+        ...prevState,
+        "billing_address.address_1": address.address_1,
+        "billing_address.city": address.city || prevState["billing_address.city"],
+        "billing_address.province": address.province,
+        "billing_address.postal_code":
+          address.postal_code || prevState["billing_address.postal_code"],
+        "billing_address.country_code":
+          address.country_code || prevState["billing_address.country_code"],
+      }))
+      setLagosError(null)
+    },
+    []
+  )
 
   return (
     <>
@@ -48,12 +87,14 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
           required
           data-testid="billing-last-name-input"
         />
-        <Input
+        <AddressAutocomplete
           label="Address"
           name="billing_address.address_1"
           autoComplete="address-line1"
           value={formData["billing_address.address_1"]}
           onChange={handleChange}
+          onPlaceSelected={handlePlaceSelected}
+          onLagosError={setLagosError}
           required
           data-testid="billing-address-input"
         />
@@ -91,11 +132,12 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
           data-testid="billing-country-select"
         />
         <Input
-          label="State / Province"
+          label="State"
           name="billing_address.province"
           autoComplete="address-level1"
           value={formData["billing_address.province"]}
           onChange={handleChange}
+          required
           data-testid="billing-province-input"
         />
         <Input
@@ -107,6 +149,7 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
           data-testid="billing-phone-input"
         />
       </div>
+      <ErrorMessage error={lagosError} data-testid="billing-lagos-validation-error" />
     </>
   )
 }

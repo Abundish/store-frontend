@@ -173,3 +173,8 @@
     animation: none;
   }
 }
+
+/* Google Places autocomplete dropdown */
+.pac-container {
+  z-index: 10000 !important;
+}
