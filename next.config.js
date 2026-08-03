@@ -38,6 +38,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.abundish.info",
       },
+      {
+        protocol: "https",
+        hostname: "staging-api.abundish.info",
+      },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [
           {
