@@ -85,7 +85,7 @@ const Payment = ({
         const session = resp?.payment_collection?.payment_sessions?.find(
           (s: any) => s.provider_id === selectedPaymentMethod
         )
-        const accessCode = session?.data?.paystackTxAccessCode as string
+        const accessCode = session?.data?.paystackAccessCode as string
 
         const PaystackPop = (await import("@paystack/inline-js")).default
         const popup = new PaystackPop()
