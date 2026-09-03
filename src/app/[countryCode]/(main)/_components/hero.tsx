@@ -52,7 +52,7 @@ export default function Hero() {
         <div className="relative bg-[#006b2f] min-h-[360px] lg:min-h-0">
           <div className="absolute inset-0">
             <Image
-              src="/hero-image.jpg"
+              src="/hero-image.webp"
               alt="Fresh farm produce — harvested at peak freshness for Abundish"
               fill
               sizes="(max-width: 1024px) 100vw, 45vw"

@@ -4,6 +4,7 @@ import { addToCart } from "@lib/data/cart"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useMemo, useState } from "react"
 import PreviewPrice from "./price"
@@ -90,11 +91,13 @@ export default function ProductPreviewCard({
           )}
 
           {image ? (
-            <img
+            <Image
               src={image}
               alt={product.title ?? "Product"}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 260px"
               draggable={false}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">

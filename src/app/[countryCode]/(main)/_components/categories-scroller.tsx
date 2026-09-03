@@ -1,15 +1,18 @@
 "use client"
 
+import Image from "next/image"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { useRef, useEffect, useState, useCallback } from "react"
 
 function CategoryCard({
   category,
+  priority = false,
 }: {
   category: HttpTypes.StoreProductCategory
+  priority?: boolean
 }) {
-  const imageUrl = `/category-images/${category.name.replaceAll(' ', '')}.png`
+  const imageUrl = `/category-images/${category.name.replaceAll(" ", "")}.webp`
 
   return (
     <LocalizedClientLink
@@ -17,9 +20,13 @@ function CategoryCard({
       aria-label={`Shop ${category.name}`}
       className="group relative flex-none w-[260px] h-[130px] rounded-[18px] overflow-hidden block"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+      <Image
+        src={imageUrl}
+        alt=""
+        fill
+        sizes="260px"
+        priority={priority}
+        className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.06]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/5" />
       <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-1.5">
@@ -118,9 +125,9 @@ export default function CategoriesScroller({
           [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
           snap-x snap-mandatory"
       >
-        {categories.map((c) => (
+        {categories.map((c, index) => (
           <div key={c.id} className="snap-start">
-            <CategoryCard category={c} />
+            <CategoryCard category={c} priority={index < 3} />
           </div>
         ))}
         <div className="flex-none w-2" aria-hidden />

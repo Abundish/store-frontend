@@ -9,7 +9,7 @@ export default function BrandStory() {
           {/* Image */}
           <div className="relative flex-1 min-h-[320px] md:min-h-[520px] overflow-hidden rounded-none md:rounded-tr-[16px] md:rounded-br-[16px]">
             <Image
-              src="/abundish-marketplace.png"
+              src="/abundish-marketplace.webp"
               alt="Abundish Marketplace"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
