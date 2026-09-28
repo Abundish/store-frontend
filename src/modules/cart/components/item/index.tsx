@@ -13,13 +13,15 @@ import { useState } from "react"
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
   currencyCode?: string
+  type?: "full" | "preview"
 }
 
-const Item = ({ item, currencyCode }: ItemProps) => {
+const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const { handle } = item.variant?.product ?? {}
+  const code = currencyCode ?? ""
 
   const changeQuantity = async (quantity: number) => {
     setError(null)
@@ -33,6 +35,47 @@ const Item = ({ item, currencyCode }: ItemProps) => {
     }
   }
 
+  if (type === "preview") {
+    return (
+      <div
+        className="grid grid-cols-[72px_minmax(0,1fr)] gap-3 py-4 items-start"
+        data-testid="product-row"
+      >
+        <LocalizedClientLink href={`/products/${handle}`}>
+          <Thumbnail item={item} />
+        </LocalizedClientLink>
+
+        <div className="flex flex-col gap-1 min-w-0">
+          <LocalizedClientLink href={`/products/${handle}`} className="group">
+            <p
+              className="font-fraunces text-[#1A3B1A] text-[16px] leading-snug break-words group-hover:text-[#006b2f] transition-colors"
+              data-testid="product-title"
+            >
+              {item.product_title}
+            </p>
+          </LocalizedClientLink>
+          <LineItemOptions variant={item.variant} data-testid="product-variant" />
+
+          <div className="flex items-center justify-between gap-3 mt-2">
+            <QuantityControl
+              quantity={item.quantity}
+              onChange={changeQuantity}
+              updating={updating}
+            />
+            <div className="shrink-0">
+              <LineItemPrice item={item} currencyCode={code} style="tight" />
+            </div>
+          </div>
+
+          <DeleteButton id={item.id} className="mt-1" />
+          {error && (
+            <p className="font-dm-mono text-[11px] text-[#cc4400] mt-1">{error}</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className="grid grid-cols-[auto_1fr] small:grid-cols-[auto_2fr_1fr_1fr_1fr] gap-4 py-5 items-center"
@@ -40,24 +83,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
     >
       {/* Thumbnail */}
       <LocalizedClientLink href={`/products/${handle}`}>
-        <div className="w-[80px] h-[80px] small:w-[88px] small:h-[88px] rounded-[12px] overflow-hidden bg-[#EEF3EC] shrink-0 relative">
-          {item.thumbnail ? (
-            <Image
-              src={item.thumbnail}
-              alt={item.product_title ?? "Product"}
-              fill
-              className="object-cover"
-              sizes="88px"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M6 22l5-8 4 6 3-4 4 6H6z" fill="#B5CEB5" />
-                <circle cx="19" cy="9" r="3" fill="#B5CEB5" />
-              </svg>
-            </div>
-          )}
-        </div>
+        <Thumbnail item={item} className="w-[80px] h-[80px] small:w-[88px] small:h-[88px]" />
       </LocalizedClientLink>
 
       {/* Product info — spans full width on mobile */}
@@ -79,11 +105,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
             onChange={changeQuantity}
             updating={updating}
           />
-          <LineItemPrice
-            item={item}
-            currencyCode={currencyCode ?? ""}
-            style="tight"
-          />
+          <LineItemPrice item={item} currencyCode={code} style="tight" />
         </div>
 
         <DeleteButton id={item.id} className="mt-1 small:mt-0" />
@@ -103,21 +125,44 @@ const Item = ({ item, currencyCode }: ItemProps) => {
 
       {/* Desktop: Unit price */}
       <div className="hidden small:flex justify-end">
-        <LineItemUnitPrice
-          item={item}
-          currencyCode={currencyCode ?? ""}
-          style="tight"
-        />
+        <LineItemUnitPrice item={item} currencyCode={code} style="tight" />
       </div>
 
       {/* Desktop: Total */}
       <div className="hidden small:flex justify-end">
-        <LineItemPrice
-          item={item}
-          currencyCode={currencyCode ?? ""}
-          style="tight"
-        />
+        <LineItemPrice item={item} currencyCode={code} style="tight" />
       </div>
+    </div>
+  )
+}
+
+const Thumbnail = ({
+  item,
+  className = "w-[72px] h-[72px]",
+}: {
+  item: HttpTypes.StoreCartLineItem
+  className?: string
+}) => {
+  return (
+    <div
+      className={`rounded-[12px] overflow-hidden bg-[#EEF3EC] shrink-0 relative ${className}`}
+    >
+      {item.thumbnail ? (
+        <Image
+          src={item.thumbnail}
+          alt={item.product_title ?? "Product"}
+          fill
+          className="object-cover"
+          sizes="88px"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M6 22l5-8 4 6 3-4 4 6H6z" fill="#B5CEB5" />
+            <circle cx="19" cy="9" r="3" fill="#B5CEB5" />
+          </svg>
+        </div>
+      )}
     </div>
   )
 }
