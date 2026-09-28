@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { flushSync } from "react-dom"
 import { Search } from "lucide-react"
-import dynamic from "next/dynamic"
-
-const SearchModal = dynamic(() => import("./search-modal"), { ssr: false })
+import SearchModal from "./search-modal"
 
 export default function SearchTrigger({
   className,
@@ -18,12 +17,12 @@ export default function SearchTrigger({
 
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation()
-    setOpen(true)
-    // Focus must happen synchronously inside the user-gesture handler
-    // so mobile browsers honour it. rAF keeps it after React's paint.
-    requestAnimationFrame(() => {
-      inputRef.current?.focus()
+    // Render the input before this click handler returns, then focus it
+    // in the same gesture so the caret (and mobile keyboard) land in the field.
+    flushSync(() => {
+      setOpen(true)
     })
+    inputRef.current?.focus()
   }
 
   return (
