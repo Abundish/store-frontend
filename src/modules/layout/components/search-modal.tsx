@@ -2,7 +2,7 @@
 
 import { searchProducts, SearchProduct } from "@lib/search"
 import { useParams, useRouter } from "next/navigation"
-import { useEffect, useRef, useState, useTransition } from "react"
+import { useEffect, useLayoutEffect, useState, useTransition } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import { Search, X, Loader2 } from "lucide-react"
@@ -18,22 +18,18 @@ export default function SearchModal({
     const [results, setResults] = useState<SearchProduct[]>([])
     const [isEmpty, setIsEmpty] = useState(false)
     const [isPending, startTransition] = useTransition()
-    const [mounted, setMounted] = useState(false)
     const router = useRouter()
     const { countryCode } = useParams() as { countryCode: string }
 
-    useEffect(() => {
-        setMounted(true)
-        return () => setMounted(false)
-    }, [])
+    useLayoutEffect(() => {
+        inputRef.current?.focus()
+    }, [inputRef])
 
     // Lock body scroll
     useEffect(() => {
         document.body.style.overflow = "hidden"
         return () => { document.body.style.overflow = "" }
     }, [])
-
-    // ← removed the focus useEffect entirely; parent handles it
 
     // Close on Escape
     useEffect(() => {
@@ -66,7 +62,7 @@ export default function SearchModal({
         router.push(`/${countryCode}/products/${handle}`)
     }
 
-    if (!mounted) return null
+    if (typeof document === "undefined") return null
 
     return createPortal(
         <>
@@ -82,8 +78,8 @@ export default function SearchModal({
                     <div className="flex items-center gap-3 px-5 py-4 border-b border-[#EEF3EC]">
                         <Search size={18} className="text-[#7A9B7A] shrink-0" />
                         <input
-                            ref={inputRef}           // ← use the ref passed from parent
-                            // autoFocus removed — we focus programmatically instead
+                            ref={inputRef}
+                            autoFocus
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
