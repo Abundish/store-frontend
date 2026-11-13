@@ -100,7 +100,8 @@ Abundish is a Nigerian farm-to-table produce platform that connects customers di
 - For urgent issues, include your order number in the subject line.
 
 ## Hours of Operations
-- Monday - Saturday: 9am-6pm
+- Monday - Saturday: 9am-1pm WAT
+- WhatsApp messages received outside these hours are responded to on the next working day
 - Sunday: Closed
 
 ## Out of scope

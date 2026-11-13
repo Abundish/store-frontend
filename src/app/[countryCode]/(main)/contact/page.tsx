@@ -140,9 +140,9 @@ export default function ContactPage() {
                     <p className="font-dm-sans text-[#7A9B7A] text-[14px] leading-[1.7]">
                         Our team is available{" "}
                         <span className="text-[#3D5A3D] font-semibold">
-                            Monday &ndash; Saturday, 9am &ndash; 6pm WAT.
+                            Monday &ndash; Saturday, 9am &ndash; 1pm WAT.
                         </span>{" "}
-                        WhatsApp messages outside these hours will be responded to the next morning.
+                        WhatsApp messages received outside these hours will be responded to on the next working day.
                     </p>
                 </div>
             </section>
